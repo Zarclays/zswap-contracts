@@ -10,3 +10,4 @@ coverage.json
 .env
 .DS_Store
 /notes.txt
+/yarn-error.log
