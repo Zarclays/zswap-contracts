@@ -89,7 +89,7 @@ contract MasterChef is Ownable {
         uint256 _sushiPerBlock,
         uint256 _startBlock,
         uint256 _bonusEndBlock
-    ) public {
+    )  {
         sushi = _sushi;
         devaddr = _devaddr;
         sushiPerBlock = _sushiPerBlock;

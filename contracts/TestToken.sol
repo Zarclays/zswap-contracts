@@ -11,12 +11,13 @@ import "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol"
 // Mint and burn can only be called by the owner (MasterChef)
 
 // ZSWAPToken
-contract ZSwapToken is ERC20PresetMinterPauser("ZSwap", "ZSWAP") {
+contract TestToken is ERC20PresetMinterPauser("Test Token", "Test") {
 
     constructor(){
         grantMintRole(_msgSender());
         _mint(_msgSender(), 1000000*10**18);// Disable for Live 
-        _mint(0x4ABda0097D7545dE58608F7E36e0C1cac68b4943, 10000* 10**18);
+        _mint(0x4ABda0097D7545dE58608F7E36e0C1cac68b4943, 100000* 10**18);
+        _mint(0x8853161EE7A92E2c5c634647b323a7CcB31EF2CD, 100000* 10**18);
     }
     
     function burn(uint256 amount) public override {

@@ -3,12 +3,14 @@
 
   const { deployer } = await getNamedAccounts()
 
-  await deploy("ZSwapToken", {
+  console.log('TestToken deployer is ', deployer)
+
+  await deploy("TestToken", {
     from: deployer,
     log: true,
     deterministicDeployment: false
   })
 }
 
-module.exports.tags = ["ZSwapToken"]
-module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+module.exports.tags = ["TT"]
+// module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]

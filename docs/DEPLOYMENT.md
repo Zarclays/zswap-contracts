@@ -1,12 +1,17 @@
 # Deployment
 
-## HardHat
+
+
+
+## Networks
+
+### HardHat
 
 ```sh
 npx hardhat node
 ```
 
-## Mainnet
+### Mainnet
 
 ```sh
 yarn mainnet:deploy
@@ -24,7 +29,7 @@ hardhat tenderly:verify --network mainnet ContractName=Address
 hardhat tenderly:push --network mainnet ContractName=Address
 ```
 
-## Ropsten
+### Ropsten
 
 ```sh
 yarn ropsten:deploy
@@ -38,7 +43,7 @@ yarn ropsten:verify
 hardhat tenderly:verify --network ropsten ContractName=Address
 ```
 
-## Kovan
+### Kovan
 
 ```sh
 yarn ropsten:deploy
@@ -50,4 +55,18 @@ yarn ropsten:verify
 
 ```sh
 hardhat tenderly:verify --network kovan ContractName=Address
+```
+
+
+
+## Specific Contracts
+
+### Deploy Multicall
+
+```sh
+npx hardhat deploy --tags Multicall2
+```
+
+```sh
+npx hardhat deploy --tags Multicall2 --network local
 ```
