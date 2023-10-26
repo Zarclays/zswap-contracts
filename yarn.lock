@@ -1755,7 +1755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typechain/ethers-v5@npm:10.2.0, @typechain/ethers-v5@npm:^10.0.0":
+"@typechain/ethers-v5@npm:^10.0.0":
   version: 10.2.0
   resolution: "@typechain/ethers-v5@npm:10.2.0"
   dependencies:
@@ -1769,6 +1769,22 @@ __metadata:
     typechain: ^8.1.1
     typescript: ">=4.3.0"
   checksum: 22f7109f22a6e2b459c45aaf5424143b6129455659aa132ab447ed14d24bb68a6b3b4021008244faca743d469208037a7766d3d9c3ab49db42d36f4e382887c4
+  languageName: node
+  linkType: hard
+
+"@typechain/ethers-v5@npm:^10.2.0":
+  version: 10.2.1
+  resolution: "@typechain/ethers-v5@npm:10.2.1"
+  dependencies:
+    lodash: ^4.17.15
+    ts-essentials: ^7.0.1
+  peerDependencies:
+    "@ethersproject/abi": ^5.0.0
+    "@ethersproject/providers": ^5.0.0
+    ethers: ^5.1.3
+    typechain: ^8.1.1
+    typescript: ">=4.3.0"
+  checksum: 852da4b1ff368ef87251111a5d50077de3d0fc12c519529269a74223740f8bda89297e67a5eb6c1f5b04ee23119566d6cbccf58264d32a83132be0f328a58d22
   languageName: node
   linkType: hard
 
@@ -2024,27 +2040,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zarclays/zswap-core-sdk@npm:0.0.1-canary.1":
-  version: 0.0.1-canary.1
-  resolution: "@zarclays/zswap-core-sdk@npm:0.0.1-canary.1"
-  dependencies:
-    "@ethersproject/address": ^5.4.0
-    "@ethersproject/bignumber": ^5.4.0
-    "@ethersproject/providers": ^5.4.0
-    "@ethersproject/solidity": ^5.4.0
-    big.js: ^6.1.1
-    decimal.js-light: ^2.5.0
-    jsbi: ^4.1.0
-    tiny-invariant: ^1.1.0
-    tiny-warning: ^1.0.0
-    toformat: ^2.0.0
-  checksum: 8bd822a43d96ae9ea20c461fa7380ec51814b9226bd9447d110f809d775e7787c9c496d7c053b5080669f1a40340ff555ca1c2bd3d43b991d8274a30e0a599ea
-  languageName: node
-  linkType: hard
-
-"@zarclays/zswap-core@workspace:.":
+"@zarclays/zswap-contracts@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@zarclays/zswap-core@workspace:."
+  resolution: "@zarclays/zswap-contracts@workspace:."
   dependencies:
     "@boringcrypto/boring-solidity": "boringcrypto/BoringSolidity#e06e943"
     "@nomiclabs/hardhat-ethers": ^2.2.3
@@ -2053,13 +2051,13 @@ __metadata:
     "@nomiclabs/hardhat-waffle": ^2.0.5
     "@openzeppelin/contracts": ^4.8.2
     "@tenderly/hardhat-tenderly": ^1.0.0
-    "@typechain/ethers-v5": 10.2.0
+    "@typechain/ethers-v5": ^10.2.0
     "@typechain/hardhat": ^6.1.5
     "@types/chai": ^4.2.22
     "@types/mocha": ^9.0.0
     "@types/node": ^16.10.1
     "@uniswap/v2-core": 1.0.1
-    "@zarclays/zswap-core-sdk": 0.0.1-canary.1
+    "@zarclays/zswap-core-sdk": 0.0.4-canary.0
     chai: ^4.3.4
     cross-env: ^7.0.0
     dotenv: ^8.2.0
@@ -2079,10 +2077,28 @@ __metadata:
     solidity-coverage: ^0.7.13
     ts-generator: ^0.1.1
     ts-node: ^9.1.1
-    typechain: 8.1.1
-    typescript: ^4.8.4
+    typechain: ^8.1.1
+    typescript: ^4.7.2
   languageName: unknown
   linkType: soft
+
+"@zarclays/zswap-core-sdk@npm:0.0.4-canary.0":
+  version: 0.0.4-canary.0
+  resolution: "@zarclays/zswap-core-sdk@npm:0.0.4-canary.0"
+  dependencies:
+    "@ethersproject/address": ^5.4.0
+    "@ethersproject/bignumber": ^5.4.0
+    "@ethersproject/providers": ^5.4.0
+    "@ethersproject/solidity": ^5.4.0
+    big.js: ^6.1.1
+    decimal.js-light: ^2.5.0
+    jsbi: ^4.1.0
+    tiny-invariant: ^1.1.0
+    tiny-warning: ^1.0.0
+    toformat: ^2.0.0
+  checksum: e6bd1ccbb37e40951f10df84f68b5b7c6c56c06c96614b42d06bbe8da6cbd59ff1e7526d6b3f3a845d91afc3ce5d57a8ad44adbeda79eb1306c290ecad8dacf2
+  languageName: node
+  linkType: hard
 
 "abbrev@npm:1, abbrev@npm:^1.0.0":
   version: 1.1.1
@@ -9825,7 +9841,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typechain@npm:8.1.1, typechain@npm:^8.0.0":
+"typechain@npm:^8.0.0":
   version: 8.1.1
   resolution: "typechain@npm:8.1.1"
   dependencies:
@@ -9847,6 +9863,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typechain@npm:^8.1.1":
+  version: 8.3.2
+  resolution: "typechain@npm:8.3.2"
+  dependencies:
+    "@types/prettier": ^2.1.1
+    debug: ^4.3.1
+    fs-extra: ^7.0.0
+    glob: 7.1.7
+    js-sha3: ^0.8.0
+    lodash: ^4.17.15
+    mkdirp: ^1.0.4
+    prettier: ^2.3.1
+    ts-command-line-args: ^2.2.0
+    ts-essentials: ^7.0.1
+  peerDependencies:
+    typescript: ">=4.3.0"
+  bin:
+    typechain: dist/cli/cli.js
+  checksum: 146a1896fa93403404be78757790b0f95b5457efebcca16b61622e09c374d555ef4f837c1c4eedf77e03abc50276d96a2f33064ec09bb802f62d8cc2b13fce70
+  languageName: node
+  linkType: hard
+
 "typedarray-to-buffer@npm:^3.1.5":
   version: 3.1.5
   resolution: "typedarray-to-buffer@npm:3.1.5"
@@ -9863,7 +9901,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.8.4":
+"typescript@npm:^4.7.2":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
@@ -9873,7 +9911,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.7.2#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
   bin:

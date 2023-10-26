@@ -3,11 +3,13 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
 
   const { deployer, dev } = await getNamedAccounts()
 
+  console.log('deployer, dev ', deployer, dev)
+
   const sushi = await ethers.getContract("ZSwapToken")
   
   const { address } = await deploy("MasterChef", {
     from: deployer,
-    args: [sushi.address, dev, "1000000000000000000000", "0", "1000000000000000000000"],
+    args: [sushi.address, dev, "10000000000000000000", "0", "1000000000000000000000"],
     log: true,
     deterministicDeployment: false
   })

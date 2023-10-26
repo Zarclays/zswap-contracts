@@ -291,6 +291,13 @@ const config: HardhatUserConfig = {
       live: true,
       saveDeployments: true,
     },
+    "celo_t": {// alfajores
+      url: "https://alfajores-forno.celo-testnet.org",
+      accounts,
+      chainId: 44787,
+      live: true,
+      saveDeployments: true,
+    },
     palm: {
       url: "https://palm-mainnet.infura.io/v3/da5fbfafcca14b109e2665290681e267",
       accounts,
@@ -342,6 +349,58 @@ const config: HardhatUserConfig = {
       live: true,
       saveDeployments: true,
     },
+
+    
+
+    mantle: {
+      url: "https://rpc.mantle.xyz",
+      accounts,
+      chainId: 5000,
+      live: true,
+      saveDeployments: true,
+    },
+    mantle_t: {
+      url: "https://rpc.testnet.mantle.xyz/",
+      accounts,
+      chainId: 5001,
+      live: true,
+      tags: ["staging"],
+    },
+
+    scroll: {
+      url: "https://1rpc.io/scroll",
+      accounts,
+      chainId: 534352,
+      live: true,
+      saveDeployments: true,
+      
+		}, 
+
+		scroll_sep: {
+			url: "https://sepolia-rpc.scroll.io",
+			accounts,
+			chainId: 534351,
+      saveDeployments: true,
+      tags: ["staging"],
+		},
+
+    findora: {
+      url: "https://rpc-mainnet.findora.org",
+      accounts,
+      chainId: 2152,
+      live: true,
+      saveDeployments: true,
+      
+		}, 
+		findora_t: {
+			url: "https://prod-testnet.prod.findora.org:8545",
+			accounts,
+			chainId: 2153,
+      saveDeployments: true,
+      tags: ["staging"],
+		},
+
+
   },
   paths: {
     artifacts: "artifacts",
@@ -359,6 +418,15 @@ const config: HardhatUserConfig = {
     compilers: [
       {
         version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: true,

@@ -15,8 +15,8 @@ contract ZSwapToken is ERC20PresetMinterPauser("ZSwap", "ZSWAP") {
 
     constructor(){
         grantMintRole(_msgSender());
-        _mint(_msgSender(), 1000000*10**18);// Disable for Live 
-        _mint(0x4ABda0097D7545dE58608F7E36e0C1cac68b4943, 10000* 10**18);
+        // _mint(_msgSender(), 1000000*10**18);// Disable for Live 
+        // _mint(0x4ABda0097D7545dE58608F7E36e0C1cac68b4943, 10000* 10**18);
     }
     
     function burn(uint256 amount) public override {

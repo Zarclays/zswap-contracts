@@ -472,6 +472,20 @@ task("deploy:complex-rewarder", "Deploy ComplexRewarder")
     }
   });
 
+
+  task("generate-mnemonic", "Generates a new Mnemonic")
+  // .addOptionalParam(
+  //   "a",
+  //   "Token A",
+  //   "0xaD6D458402F60fD3Bd25163575031ACDce07538D"
+  // )
+  // .addOptionalParam(
+  //   "b",
+  //   "Token B",
+  //   "0xc778417E063141139Fce010982780140Aa0cD5Ab"
+  // )
+  .setAction(require("./generate-mnemonic"));
+
 // task("deploy:clone-rewarder", "Deploy CloneRewarder")
 // .addParam("rewardToken", "Reward Token")
 // .addParam("lpToken", "LP Token")

@@ -1,20 +1,37 @@
 const { WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk");
 
+const wethDeployNames= {
+  31337: {
+    name: 'Wrapped CELO',
+    symbol: 'WCELO'
+  },
+  42220: {
+    name: 'Wrapped CELO',
+    symbol: 'WCELO'
+  },
+  44787: {
+    name: 'Wrapped CELO',
+    symbol: 'WCELO'
+  },
+}
+
 module.exports = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();
 
   const chainId = await getChainId();
-  console.log('chainId is ', chainId)
+  
   let wethAddress;
 
-  if (chainId === "31337" || chainId === "1337") {
-    wethAddress = (await deployments.get("WETH9Mock")).address;
-  } else if (chainId in WNATIVE_ADDRESS) {
+  if (chainId in WNATIVE_ADDRESS) {
     wethAddress = WNATIVE_ADDRESS[chainId];
   } else {
-    throw Error("No WNATIVE!");
+    const weth = await ethers.getContract("WETH9");
+    wethAddress = weth.address
+    if(!wethAddress){
+      throw Error("No WNATIVE!");
+    }
   }
 
   const factoryAddress = (await deployments.get("UniswapV2Factory")).address;
@@ -28,4 +45,4 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 };
 
 module.exports.tags = ["UniswapV2Router02", "AMM"];
-module.exports.dependencies = ["UniswapV2Factory", "Mocks"];
+module.exports.dependencies = ["UniswapV2Factory","WETH", "Mocks"];

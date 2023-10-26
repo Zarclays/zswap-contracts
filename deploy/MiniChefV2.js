@@ -1,6 +1,7 @@
 const { ZSWAPTOKEN_ADDRESS } = require("@zarclays/zswap-core-sdk");
 
 module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
+  
   const { deploy } = deployments;
 
   const { deployer, dev } = await getNamedAccounts();
@@ -14,7 +15,9 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
   } else if (chainId in ZSWAPTOKEN_ADDRESS) {
     sushiAddress = ZSWAPTOKEN_ADDRESS[chainId];
   } else {
-    throw Error("No SUSHI!");
+    const sushi = await ethers.getContract("ZSwapToken")
+    sushiAddress= sushi.address
+    // throw Error("No SUSHI!");
   }
 
   await deploy("MiniChefV2", {

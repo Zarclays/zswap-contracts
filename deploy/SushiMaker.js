@@ -1,4 +1,4 @@
-const { WETH_ADDRESS } = require("@zarclays/zswap-core-sdk")
+const { WETH9_ADDRESS: WETH_ADDRESS } = require("@zarclays/zswap-core-sdk")
 
 module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts, deployments }) {
   const { deploy } = deployments
@@ -18,8 +18,13 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
   } else if (chainId in WETH_ADDRESS) {
     wethAddress = WETH_ADDRESS[chainId]
   } else {
-    throw Error("No WETH!")
+    const weth = await ethers.getContract("WETH9");
+    wethAddress = weth.address
+    if(!wethAddress){
+      throw Error("No WETH!");
+    }
   }
+
 
   await deploy("SushiMaker", {
     from: deployer,

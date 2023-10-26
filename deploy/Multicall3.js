@@ -3,11 +3,11 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
   const { deployer, dev } = await getNamedAccounts();
 
-  await deploy("Multicall2", {
+  await deploy("Multicall3", {
     from: deployer,
     log: true,
     deterministicDeployment: false,
   });
 };
 
-module.exports.tags = ["Multicall2"];
+module.exports.tags = ["Multicall3"];
