@@ -1,4 +1,4 @@
-const { WETH9_ADDRESS: WETH_ADDRESS } = require("@zarclays/zswap-core-sdk")
+const { WETH9_ADDRESS: WETH_ADDRESS, WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk")
 
 module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts, deployments }) {
   const { deploy } = deployments
@@ -15,9 +15,14 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
   
   if (chainId === '31337' || chainId === '1337') {
     wethAddress = (await deployments.get("WETH9Mock")).address
-  } else if (chainId in WETH_ADDRESS) {
+  } 
+  else if (chainId in WETH_ADDRESS) {
     wethAddress = WETH_ADDRESS[chainId]
-  } else {
+  }
+  else if (chainId in WNATIVE_ADDRESS) {
+    wethAddress = WNATIVE_ADDRESS[chainId]
+  }
+  else {
     const weth = await ethers.getContract("WETH9");
     wethAddress = weth.address
     if(!wethAddress){
@@ -41,4 +46,4 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
 }
 
 module.exports.tags = ["SushiMaker"]
-module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02", "SushiBar", "ZSwapToken"]
+module.exports.dependencies = ["UniswapV2Factory","WETH", "UniswapV2Router02", "SushiBar", "ZSwapToken"]

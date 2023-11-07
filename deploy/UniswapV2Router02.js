@@ -1,19 +1,5 @@
 const { WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk");
 
-const wethDeployNames= {
-  31337: {
-    name: 'Wrapped CELO',
-    symbol: 'WCELO'
-  },
-  42220: {
-    name: 'Wrapped CELO',
-    symbol: 'WCELO'
-  },
-  44787: {
-    name: 'Wrapped CELO',
-    symbol: 'WCELO'
-  },
-}
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments;

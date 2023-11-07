@@ -2,8 +2,8 @@ const { WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk");
 
 const wethDeployNames= {
   31337: {
-    name: 'Wrapped CELO',
-    symbol: 'WCELO'
+    name: 'Wrapped ETH',
+    symbol: 'WETH'
   },
   42220: {
     name: 'Wrapped CELO',
@@ -12,6 +12,16 @@ const wethDeployNames= {
   44787: {
     name: 'Wrapped CELO',
     symbol: 'WCELO'
+  },
+
+  4002: {
+    name: 'Wrapped Fantom',
+    symbol: 'WFTM'
+  },
+
+  534351: {
+    name: 'Wrapped SCROLL',
+    symbol: 'wScroll'
   },
 }
 
@@ -34,9 +44,13 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     const weth = await ethers.getContract("WETH9");
     wethAddress = weth.address
   } else if (chainId in WNATIVE_ADDRESS) {
+    
     wethAddress = WNATIVE_ADDRESS[chainId];
+    console.log('Using Native WETH ', wethAddress)
   } else {
+    console.log('Deploying WETH ')
     const wethInChain = wethDeployNames[+chainId];
+    console.log('wethInChain: ',wethInChain)
     if(wethInChain){
       console.log(wethInChain)
       await deploy("WETH9", {

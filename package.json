@@ -1,6 +1,6 @@
 {
   "name": "@zarclays/zswap-contracts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "description": "Core contracts for the ZSwap protocol",
   "main": "dist/types/index.js",
@@ -16,12 +16,12 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zarclays/zswap-core.git"
+    "url": "git+https://github.com/zarclays/zswap-contracts.git"
   },
   "bugs": {
-    "url": "https://github.com/zarclays/zswap-core/issues"
+    "url": "https://github.com/zarclays/zswap-contracts/issues"
   },
-  "homepage": "https://github.com/zarclays/zswap-core#readme",
+  "homepage": "https://github.com/zarclays/zswap-contracts#readme",
   "keywords": [
     "zswap",
     "ethereum"
