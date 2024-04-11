@@ -399,7 +399,27 @@ const config: HardhatUserConfig = {
       saveDeployments: true,
       tags: ["staging"],
 		},
+    meter_testnet: {
+			url: "https://rpctest.meter.io",
+			accounts,
+			chainId: 83,
+		},
+		meter: {
+			url: "https://rpc.meter.io",
+			accounts,
+			chainId: 82,
+		},
 
+    core_testnet: {
+			url: "https://rpc.test.btcs.network/",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 1115,
+		},
+		core: {
+			url: "https://rpc.coredao.org/",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 1116,
+		},
 
   },
   paths: {

@@ -1,5 +1,7 @@
 const { task } = require("hardhat/config");
 
+require("./token")
+
 const {
   ethers: {
     constants: { MaxUint256 },

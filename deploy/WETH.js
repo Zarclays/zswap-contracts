@@ -23,6 +23,26 @@ const wethDeployNames= {
     name: 'Wrapped SCROLL',
     symbol: 'wScroll'
   },
+
+  82: {
+    name: 'Wrapped MTRG',
+    symbol: 'wMTRG'
+  },
+
+  83: {
+    name: 'Wrapped MTRG',
+    symbol: 'wMTRG'
+  },
+
+  1115: {
+    name: 'Wrapped tCore',
+    symbol: 'wtCore'
+  },
+
+  1116: {
+    name: 'Wrapped Core',
+    symbol: 'wCore'
+  },
 }
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
