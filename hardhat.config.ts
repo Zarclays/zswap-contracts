@@ -376,7 +376,7 @@ const config: HardhatUserConfig = {
       
 		}, 
 
-		scroll_sep: {
+		scroll_sep: { //Scroll Sepolia
 			url: "https://sepolia-rpc.scroll.io",
 			accounts,
 			chainId: 534351,
@@ -419,7 +419,7 @@ const config: HardhatUserConfig = {
 			url: "https://rpc.coredao.org/",
 			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
 			chainId: 1116,
-		},
+		}
 
   },
   paths: {
