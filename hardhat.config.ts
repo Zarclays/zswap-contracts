@@ -38,7 +38,20 @@ const config: HardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      mainnet: process.env.SCROLLSCAN_API_KEY||'',
+      scroll_sepolia: process.env.SCROLLSCAN_API_KEY||''
+    },
+    customChains: [
+      {
+        network: "scroll_sepolia",
+        chainId: 534351,
+        urls: {
+          apiURL: "https://api-sepolia.scrollscan.com/api",
+          browserURL: "https://sepolia.scrollscan.com/"
+        }
+      }
+    ]
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
@@ -376,7 +389,7 @@ const config: HardhatUserConfig = {
       
 		}, 
 
-		scroll_sep: { //Scroll Sepolia
+		scroll_sepolia: { //Scroll Sepolia
 			url: "https://sepolia-rpc.scroll.io",
 			accounts,
 			chainId: 534351,

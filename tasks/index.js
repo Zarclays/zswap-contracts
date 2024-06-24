@@ -488,6 +488,10 @@ task("deploy:complex-rewarder", "Deploy ComplexRewarder")
   // )
   .setAction(require("./generate-mnemonic"));
 
+  task("pk-from-mnemonic", "Outputs Private Key from Mnemonic given")
+    .addParam('mnemonic', 'Mnemonic')
+    .setAction(require("./pk-from-mnemonic"));
+
 // task("deploy:clone-rewarder", "Deploy CloneRewarder")
 // .addParam("rewardToken", "Reward Token")
 // .addParam("lpToken", "LP Token")

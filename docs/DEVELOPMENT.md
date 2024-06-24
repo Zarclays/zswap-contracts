@@ -77,3 +77,9 @@ yarn lint
 ```sh
 npx hardhat watch compile
 ```
+
+
+## Verify Contract
+```sh
+npx hardhat  etherscan-verify --network scroll_sepolia --solc-input --api-url https://api-sepolia.scrollscan.com --api-key XXB....
+```
