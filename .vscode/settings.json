@@ -2,7 +2,7 @@
   "editor.formatOnSave": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "mochaExplorer.files": "test/**/*.{j,t}s",
   "mochaExplorer.fullTrace": true,
