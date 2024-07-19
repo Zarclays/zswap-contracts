@@ -6,7 +6,7 @@
   await deploy("ZSwapToken", {
     from: deployer,
     log: true,
-    deterministicDeployment: false
+    deterministicDeployment: true
   })
 }
 
