@@ -43,6 +43,11 @@ const wethDeployNames= {
     name: 'Wrapped Core',
     symbol: 'wCore'
   },
+
+  2713017997578000: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH'
+  },
 }
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
@@ -68,10 +73,11 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     wethAddress = WNATIVE_ADDRESS[chainId];
     console.log('Using Native WETH ', wethAddress)
   } else {
-    console.log('Deploying WETH ')
+    
     const wethInChain = wethDeployNames[+chainId];
     console.log('wethInChain: ',wethInChain)
     if(wethInChain){
+      console.log('Deploying WETH ')
       console.log(wethInChain)
       await deploy("WETH9", {
         from: deployer,

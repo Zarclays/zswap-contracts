@@ -1,10 +1,10 @@
 # ZSwap
 
-https://zswap.zarclays.com/
+https://zswap.app
 
 ## Deployed Contracts
 
-https://dev.zswap.zarclays.com/zswap/contracts
+https://dev.zswap.app/contracts
 
 ## Publish
 yarn npm publish
