@@ -2108,10 +2108,10 @@
     "@walletconnect/window-getters" "^1.0.1"
     tslib "1.14.1"
 
-"@zarclays/zswap-core-sdk@^0.1.13":
-  version "0.1.13"
-  resolved "https://registry.npmjs.org/@zarclays/zswap-core-sdk/-/zswap-core-sdk-0.1.13.tgz"
-  integrity sha512-B3VZ4WBLCNlyozS80hGlPmrFq81L+W7UTpXMn3MiI0/8is1m2PKz9BWtfTZqaRffQSEN2Kx8EtK5586JMRIOXA==
+"@zarclays/zswap-core-sdk@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@zarclays/zswap-core-sdk/-/zswap-core-sdk-0.1.0.tgz"
+  integrity sha512-tpehxK9yNBp8XhcPFnNLbEUSssvzQMdXq7bXQyx4zw6RhCtS0Bk395fZan5F6a00xkaKpc/4LAkcgTlHonwu+A==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"
