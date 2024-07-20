@@ -1,8 +1,10 @@
-const { getApprovalDigest } = require("./utilities")
+import { subtask, task, types } from "hardhat/config";
 
-const { ecsign } = require("ethereumjs-util")
+import { getApprovalDigest } from "./utilities.cts"
 
-module.exports = async function (
+import { ecsign } from "ethereumjs-util"
+
+export async function migrate (
   { tokenA, tokenB },
   { 
     getChainId, 
@@ -11,17 +13,20 @@ module.exports = async function (
       utils: { hexlify },
       constants: { MaxUint256 },
       Wallet,
-    }
+    },
+    hre
   },
   runSuper
 ) {
 
-  console.log("Migrate", config.networks[hre.network.name].accounts)
+  console.log("Migrate", hre.config.networks[hre.network.name].accounts)
 
+   
+  //@ts-ignore
   // Dev private key
   const privateKey = Wallet.fromMnemonic(config.networks[hre.network.name].accounts.mnemonic, "m/44'/60'/0'/0/1").privateKey
 
-  const erc20Contract = await ethers.getContractFactory("UniswapV2ERC20")
+  const erc20Contract = await hre.ethers.getContractFactory("UniswapV2ERC20")
 
   const token = erc20Contract.attach("0x1c5DEe94a34D795f9EEeF830B68B80e44868d316")
 
@@ -29,9 +34,10 @@ module.exports = async function (
 
   const dev = await getNamedSigner("dev")
 
+  //@ts-ignore
   const nonce = await token.connect(dev).nonces(dev.address)
 
-  const sushiRoll = await ethers.getContract("SushiRoll")
+  const sushiRoll = await hre.ethers.getContract("SushiRoll")
 
   const chainId = await getChainId()
 
@@ -40,7 +46,7 @@ module.exports = async function (
     chainId,
     {
       owner: dev.address,
-      spender: sushiRoll.address,
+      spender: sushiRoll.getAddress(),
       value: await token.balanceOf(dev.address),
     },
     nonce,
@@ -56,6 +62,7 @@ module.exports = async function (
 
   const migrateTx = await sushiRoll
     .connect(dev)
+    //@ts-ignore
     .migrateWithPermit(
       tokenA,
       tokenB,

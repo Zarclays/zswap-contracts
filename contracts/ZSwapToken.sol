@@ -13,8 +13,9 @@ import "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol"
 // ZSWAPToken
 contract ZSwapToken is ERC20PresetMinterPauser("ZSwap", "ZSWAP") {
 
-    constructor(){
-        grantMintRole(_msgSender());
+    constructor(address minter){
+        // grantMintRole(_msgSender());
+        grantMintRole(minter);
         // _mint(_msgSender(), 1000000*10**18);// Disable for Live 
         // _mint(0x4ABda0097D7545dE58608F7E36e0C1cac68b4943, 10000* 10**18);
     }

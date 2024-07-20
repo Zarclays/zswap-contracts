@@ -1,6 +1,20 @@
-const { WETH9_ADDRESS: WETH_ADDRESS, WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk")
+// import { WETH9_ADDRESS, WNATIVE_ADDRESS } from "@zarclays/zswap-core-sdk"
 
-module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts, deployments }) {
+// const zswapCore = await import("@zarclays/zswap-core-sdk");
+// const {WETH9_ADDRESS, WNATIVE_ADDRESS } = zswapCore;
+
+import { AddressMap } from '@zarclays/zswap-core-sdk';
+
+
+let WETH9_ADDRESS: AddressMap;
+let WNATIVE_ADDRESS: AddressMap;
+const zswapCore = import("@zarclays/zswap-core-sdk").then((zswapCore)=>{
+  WETH9_ADDRESS = zswapCore.WETH9_ADDRESS;
+  WNATIVE_ADDRESS = zswapCore.WNATIVE_ADDRESS;
+
+});
+
+const func = async function ({ ethers, getNamedAccounts, deployments, getChainId }) {
   const { deploy } = deployments
 
   const { deployer, dev } = await getNamedAccounts()
@@ -16,8 +30,8 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
   if (chainId === '31337' || chainId === '1337') {
     wethAddress = (await deployments.get("WETH9Mock")).address
   } 
-  else if (chainId in WETH_ADDRESS) {
-    wethAddress = WETH_ADDRESS[chainId]
+  else if (chainId in WETH9_ADDRESS) {
+    wethAddress = WETH9_ADDRESS[chainId]
   }
   else if (chainId in WNATIVE_ADDRESS) {
     wethAddress = WNATIVE_ADDRESS[chainId]
@@ -33,9 +47,9 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
 
   await deploy("SushiMaker", {
     from: deployer,
-    args: [factory.address, bar.address, sushi.address, wethAddress],
+    args: [factory.address, bar.address, sushi.address, wethAddress, deployer],
     log: true,
-    deterministicDeployment: false
+    deterministicDeployment: true
   })
 
   const maker = await ethers.getContract("SushiMaker")
@@ -45,5 +59,7 @@ module.exports = async function ({ ethers: { getNamedSigner }, getNamedAccounts,
   }
 }
 
-module.exports.tags = ["SushiMaker"]
-module.exports.dependencies = ["UniswapV2Factory","WETH", "UniswapV2Router02", "SushiBar", "ZSwapToken"]
+func.tags = ["SushiMaker"]
+func.dependencies = ["UniswapV2Factory","WETH", "UniswapV2Router02", "SushiBar", "ZSwapToken"]
+
+export default func

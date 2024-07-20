@@ -1,0 +1,28 @@
+diff --git a/node_modules/@zarclays/zswap-core-sdk/dist/zswap-core-sdk.esm.js b/node_modules/@zarclays/zswap-core-sdk/dist/zswap-core-sdk.esm.js
+index 98af69a..ed3d02a 100644
+--- a/node_modules/@zarclays/zswap-core-sdk/dist/zswap-core-sdk.esm.js
++++ b/node_modules/@zarclays/zswap-core-sdk/dist/zswap-core-sdk.esm.js
+@@ -8,7 +8,7 @@ import _Big from 'big.js';
+ import _Decimal from 'decimal.js-light';
+ import toFormat from 'toformat';
+ import { keccak256, pack } from '@ethersproject/solidity';
+-
++const ttt='play'
+ var ChainId;
+ (function (ChainId) {
+   ChainId[ChainId["ETHEREUM"] = 1] = "ETHEREUM";
+diff --git a/node_modules/@zarclays/zswap-core-sdk/package.json b/node_modules/@zarclays/zswap-core-sdk/package.json
+index 3dab33e..c05bd77 100644
+--- a/node_modules/@zarclays/zswap-core-sdk/package.json
++++ b/node_modules/@zarclays/zswap-core-sdk/package.json
+@@ -2,8 +2,9 @@
+   "name": "@zarclays/zswap-core-sdk",
+   "version": "0.1.14",
+   "license": "MIT",
+-  "main": "dist/index.js",
++  "main": "dist/zswap-core-sdk.esm.js",
+   "typings": "dist/index.d.ts",
++  "type":"module",
+   "files": [
+     "dist"
+   ],

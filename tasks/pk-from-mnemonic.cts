@@ -1,6 +1,6 @@
 
 
-module.exports = async function (taskArguments, hre, runSuper) {
+export async function pkFromMnemonic (taskArguments, hre, runSuper) {
 
   const  { Wallet, utils } = hre.ethers;
   const { mnemonic } = taskArguments

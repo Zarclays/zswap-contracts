@@ -1,4 +1,7 @@
-module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
+import {DeployFunction} from 'hardhat-deploy/types';
+
+//@ts-ignore
+const func: DeployFunction = async function ({ ethers, deployments, getNamedAccounts }) {
   const { deploy } = deployments
 
   const { deployer, dev } = await getNamedAccounts()
@@ -9,9 +12,9 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
   
   const { address } = await deploy("MasterChef", {
     from: deployer,
-    args: [sushi.address, dev, "10000000000000000000", "0", "1000000000000000000000"],
+    args: [sushi.address, dev, "10000000000000000000", "0", "1000000000000000000000", deployer],
     log: true,
-    deterministicDeployment: false
+    deterministicDeployment: true
   })
 
   // if (await sushi.owner() !== address) {
@@ -23,6 +26,8 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
   }
 
   const masterChef = await ethers.getContract("MasterChef")
+  console.log('MatseChef owner:', await masterChef.owner())
+  console.log('deployer:', deployer,', dev: ', dev)
   if (await masterChef.owner() !== dev) {
     // Transfer ownership of MasterChef to dev
     console.log("Transfer ownership of MasterChef to dev")
@@ -30,5 +35,6 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
   }
 }
 
-module.exports.tags = ["MasterChef"]
-module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02", "ZSwapToken"]
+export default func;
+func.dependencies = ["UniswapV2Factory", "UniswapV2Router02", "ZSwapToken"]
+func.tags = ['MasterChef'];

@@ -78,8 +78,9 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
     event LogSushiPerSecond(uint256 sushiPerSecond);
 
     /// @param _sushi The SUSHI token contract address.
-    constructor(IERC20 _sushi) public {
+    constructor(IERC20 _sushi, address owner) public {
         SUSHI = _sushi;
+        transferOwnership(owner, true,false);
     }
 
     /// @notice Returns the number of MCV2 pools.

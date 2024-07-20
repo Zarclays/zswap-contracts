@@ -6,7 +6,7 @@
 
 // const { BN, bufferToHex, privateToAddress, toBuffer } = require("ethereumjs-util")
 
-module.exports = async function (taskArguments, hre, runSuper) {
+export async function generateMnemonic (taskArguments, hre, runSuper) {
 
   const  { Wallet, utils } = hre.ethers;
 

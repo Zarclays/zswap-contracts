@@ -1,8 +1,21 @@
-const { ZSWAPTOKEN_ADDRESS } = require("@zarclays/zswap-core-sdk");
+// import { ZSWAPTOKEN_ADDRESS } from "@zarclays/zswap-core-sdk";
 
-module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
-  
-  const { deploy } = deployments;
+import {HardhatRuntimeEnvironment} from 'hardhat/types';
+import {DeployFunction} from 'hardhat-deploy/types';
+import { parseEther } from 'ethers';
+import { AddressMap } from '@zarclays/zswap-core-sdk';
+
+let ZSWAPTOKEN_ADDRESS: AddressMap;
+const zswapCore = import("@zarclays/zswap-core-sdk").then((zswapCore)=>{
+  ZSWAPTOKEN_ADDRESS = zswapCore.ZSWAPTOKEN_ADDRESS;
+
+
+});
+
+
+//@ts-ignore
+const func: DeployFunction = async function ({ ethers, deployments, getNamedAccounts, getChainId }) {
+	const { deploy } = deployments;
 
   const { deployer, dev } = await getNamedAccounts();
 
@@ -22,9 +35,9 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
 
   await deploy("MiniChefV2", {
     from: deployer,
-    args: [sushiAddress],
+    args: [sushiAddress, deployer],
     log: true,
-    deterministicDeployment: false,
+    deterministicDeployment: true,
   });
 
   const miniChefV2 = await ethers.getContract("MiniChefV2");
@@ -32,7 +45,8 @@ module.exports = async function ({ ethers, deployments, getNamedAccounts }) {
     console.log("Transfer ownership of MiniChef to dev");
     await (await miniChefV2.transferOwnership(dev, true, false)).wait();
   }
-};
 
-module.exports.tags = ["MiniChefV2"];
-// module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+};
+export default func;
+func.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+func.tags = ['MiniChefV2'];

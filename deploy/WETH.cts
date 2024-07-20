@@ -1,4 +1,16 @@
-const { WNATIVE_ADDRESS } = require("@zarclays/zswap-core-sdk");
+// import { WNATIVE_ADDRESS } from "@zarclays/zswap-core-sdk";
+
+import { AddressMap } from "@zarclays/zswap-core-sdk";
+
+// const zswapCore = await import("@zarclays/zswap-core-sdk");
+// const {WETH9_ADDRESS, WNATIVE_ADDRESS } = zswapCore;
+let WETH9_ADDRESS: AddressMap;
+let WNATIVE_ADDRESS: AddressMap;
+const zswapCore = import("@zarclays/zswap-core-sdk").then((zswapCore)=>{
+  WETH9_ADDRESS = zswapCore.WETH9_ADDRESS;
+  WNATIVE_ADDRESS = zswapCore.WNATIVE_ADDRESS;
+
+});
 
 const wethDeployNames= {
   31337: {
@@ -50,7 +62,7 @@ const wethDeployNames= {
   },
 }
 
-module.exports = async function ({ getNamedAccounts, deployments }) {
+const func = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();
@@ -95,5 +107,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
 };
 
-module.exports.tags = ["WETH", "AMM"];
+func.tags = ["WETH", "AMM"];
+
+export default func;
 

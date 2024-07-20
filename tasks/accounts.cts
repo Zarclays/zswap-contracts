@@ -1,12 +1,14 @@
-const { normalizeHardhatNetworkAccountsConfig } = require("hardhat/internal/core/providers/util")
+import {normalizeHardhatNetworkAccountsConfig } from "hardhat/internal/core/providers/util.js";
 
-const { BN, bufferToHex, privateToAddress, toBuffer } = require("ethereumjs-util")
+import { BN, bufferToHex, privateToAddress, toBuffer } from "ethereumjs-util";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-module.exports = async function (taskArguments, hre, runSuper) {
+export async function accounts (taskArguments: any, hre: HardhatRuntimeEnvironment , runSuper: any) {
   const networkConfig = hre.config.networks["mainnet"]
 
   console.log(networkConfig.accounts)
 
+  //@ts-ignore
   const accounts = normalizeHardhatNetworkAccountsConfig(networkConfig.accounts)
 
   console.log("Accounts")

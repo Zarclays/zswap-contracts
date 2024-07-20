@@ -1,4 +1,4 @@
- module.exports = async function ({ getNamedAccounts, deployments }) {
+ const func = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
@@ -6,9 +6,12 @@
   await deploy("ZSwapToken", {
     from: deployer,
     log: true,
-    deterministicDeployment: true
+    args:[deployer],
+    deterministicDeployment: false,// "0xfeedDAbb"
   })
 }
 
-module.exports.tags = ["ZSwapToken"]
+func.tags = ["ZSwapToken"]
 // module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+
+export default func

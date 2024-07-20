@@ -1,18 +1,19 @@
-const { task } = require("hardhat/config");
 
-const {
-  ethers: {
-    constants: { MaxUint256 },
-  },
-  utils: { defaultAbiCoder },
-} = require("ethers");
-const { MINICHEF_ADDRESS } = require("@zarclays/zswap-core-sdk");
+// const {
+//   ethers: {
+    
+//   },
+//   utils: {  },
+// } = require("ethers");
+import { MINICHEF_ADDRESS } from "@zarclays/zswap-core-sdk";
 
-const fs = require("fs");
+import fs from "fs";
+import { task } from "hardhat/config";
+import { accounts } from "./accounts.cts";
 
 
 
-task("token:accounts", "Prints the list of accounts", require("./accounts"));
+task("token:accounts", "Prints the list of accounts", accounts);
 
 
 // task("feeder:feed", "Feed").setAction(async function (
@@ -61,12 +62,12 @@ task("zswap:mintTo", "Mint ZSwap token to address")
   // .addOptionalParam("deadline", MaxUint256)
   .setAction(async function (
     { token, to, amount },
-    { ethers: { getNamedSigner } },
+    hre: any,
     runSuper
   ) {
-    const zSwap = await ethers.getContract("ZSwapToken");
-    
-    let tx = await zSwap.connect(await getNamedSigner("deployer")).mint(to, ethers.utils.parseEther(amount));
+    const zSwap = await hre.ethers.getContract("ZSwapToken");
+    //@ts-ignore
+    let tx = await zSwap.connect(await hre.ethers.getNamedSigner("deployer")).mint(to, hre.ethers.parseEther(amount));
     await tx.wait()
 
     console.log('Done')

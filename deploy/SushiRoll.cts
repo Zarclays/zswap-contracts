@@ -10,7 +10,7 @@ UNISWAP_ROUTER.set("79377087078960", "0x0B72c0193CD598b536210299d358A5b720A262b8
 UNISWAP_ROUTER.set("42220", "0xe3d8bd6aed4f159bc8000a9cd47cffdb95f96121")//Ubeswap -celo
 UNISWAP_ROUTER.set("44787", "0xe3d8bd6aed4f159bc8000a9cd47cffdb95f96121")//Ubeswap -celo test
 
-module.exports = async function ({ getNamedAccounts, getChainId, deployments }) {
+const func = async function ({ getNamedAccounts, getChainId, deployments }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
@@ -35,5 +35,8 @@ module.exports = async function ({ getNamedAccounts, getChainId, deployments }) 
   })
 }
 
-module.exports.tags = ["SushiRoll"]
-module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+func.tags = ["SushiRoll"]
+func.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+
+// module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+export default func

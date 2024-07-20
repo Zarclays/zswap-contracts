@@ -1,4 +1,4 @@
- module.exports = async function ({ getNamedAccounts, deployments }) {
+ const func = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
@@ -9,9 +9,11 @@
     from: deployer,
     log: true,
     deterministicDeployment: false,
-    args:[ "Tether (USDT)","USDT"]
+    args:[deployer, "Tether (USDT)","USDT"]
   })
 }
 
-module.exports.tags = ["usdt"]
+func.tags = ["usdt"]
 // module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02"]
+
+export default func

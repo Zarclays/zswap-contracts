@@ -51,12 +51,15 @@ contract SushiMaker is Ownable {
         address _factory,
         address _bar,
         address _sushi,
-        address _weth
+        address _weth,
+        address owner
     ) public {
         factory = IUniswapV2Factory(_factory);
         bar = _bar;
         sushi = _sushi;
         weth = _weth;
+
+        transferOwnership(owner,true,false);
     }
 
     // F1 - F10: OK

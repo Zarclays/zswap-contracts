@@ -1,6 +1,12 @@
-const {
-  ethers: { utils: { keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } },
-} = require("ethers")
+// const {
+//   ethers: { utils: { keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } },
+// } = require("ethers")
+import {ethers} from "ethers";
+// import {keccak256,toUtf8Bytes, solidityPacked, ethers} from "ethers";
+const keccak256 = ethers.utils.keccak256
+const toUtf8Bytes = ethers.utils.toUtf8Bytes
+const solidityPack = ethers.utils.solidityPack
+const defaultAbiCoder = ethers.utils.defaultAbiCoder
 
 const PERMIT_TYPEHASH = keccak256(toUtf8Bytes("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"))
 
@@ -19,11 +25,12 @@ function getDomainSeparator(name, chainId, tokenAddress) {
   )
 }
 
-async function getApprovalDigest(token, chainId, approve, nonce, deadline) {
+export async function getApprovalDigest(token, chainId, approve, nonce, deadline) {
   const name = await token.name()
+  
   const DOMAIN_SEPARATOR = getDomainSeparator(name, chainId, token.address)
   return keccak256(
-    solidityPack(
+    solidityPacked(
       ["bytes1", "bytes1", "bytes32", "bytes32"],
       [
         "0x19",
@@ -40,6 +47,4 @@ async function getApprovalDigest(token, chainId, approve, nonce, deadline) {
   )
 }
 
-module.exports = {
-  getApprovalDigest
-}
+

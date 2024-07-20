@@ -1,4 +1,7 @@
-module.exports = async function ({ getNamedAccounts, deployments }) {
+import {DeployFunction} from 'hardhat-deploy/types';
+
+
+const func = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
@@ -9,7 +12,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
   })
 }
 
-module.exports.skip = ({ getChainId }) =>
+export const skip = ({ getChainId }) =>
   new Promise(async (resolve, reject) => {
     try {
       const chainId = await getChainId()
@@ -19,4 +22,6 @@ module.exports.skip = ({ getChainId }) =>
     }
   })
 
-module.exports.tags = ["test", "Mocks"]
+func.tags = ["test", "Mocks"];
+
+export default func;

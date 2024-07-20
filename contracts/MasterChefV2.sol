@@ -80,10 +80,12 @@ contract MasterChefV2 is BoringOwnable, BoringBatchable {
     /// @param _MASTER_CHEF The SushiSwap MCV1 contract address.
     /// @param _sushi The SUSHI token contract address.
     /// @param _MASTER_PID The pool ID of the dummy token on the base MCV1 contract.
-    constructor(IMasterChef _MASTER_CHEF, IERC20 _sushi, uint256 _MASTER_PID) public {
+    constructor(IMasterChef _MASTER_CHEF, IERC20 _sushi, uint256 _MASTER_PID, address owner) public {
         MASTER_CHEF = _MASTER_CHEF;
         SUSHI = _sushi;
         MASTER_PID = _MASTER_PID;
+
+        transferOwnership(owner, true, false);
     }
 
     /// @notice Deposits a dummy token to `MASTER_CHEF` MCV1. This is required because MCV1 holds the minting rights for SUSHI.

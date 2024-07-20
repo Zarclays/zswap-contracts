@@ -1,4 +1,4 @@
-module.exports = async function ({ getNamedAccounts, deployments }) {
+const func = async function ({ getNamedAccounts, deployments }) {
   const { deploy } = deployments
 
   const { deployer } = await getNamedAccounts()
@@ -13,5 +13,6 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
   })
 }
 
-module.exports.tags = ["SushiBar"]
-module.exports.dependencies = ["UniswapV2Factory", "UniswapV2Router02", "ZSwapToken"]
+func.tags = ["SushiBar"]
+func.dependencies = ["UniswapV2Factory", "UniswapV2Router02", "ZSwapToken"]
+export default func

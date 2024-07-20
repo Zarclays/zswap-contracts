@@ -24,3 +24,8 @@ yarn npm publish
 ## License
 
 [MIT](LICENSE.txt)
+
+
+
+## Patch-Package
+`npx patch-package @zarclays/zswap-core-sdk  --exclude p.json$`

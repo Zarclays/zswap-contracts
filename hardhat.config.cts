@@ -1,24 +1,29 @@
 // hardhat.config.ts
 
 import "dotenv/config"
-import "@nomiclabs/hardhat-etherscan"
-import "@nomiclabs/hardhat-solhint"
-import "@tenderly/hardhat-tenderly"
-import "@nomiclabs/hardhat-waffle"
-import "hardhat-abi-exporter"
-import "hardhat-deploy"
-import "hardhat-deploy-ethers"
-import "hardhat-gas-reporter"
-import "hardhat-spdx-license-identifier"
+// import "@nomiclabs/hardhat-etherscan"
+// import "@nomiclabs/hardhat-solhint"
+// import "@tenderly/hardhat-tenderly"
+// import "@nomiclabs/hardhat-waffle"
+// import "hardhat-abi-exporter"
+// import "hardhat-deploy"
+// import "hardhat-deploy-ethers"
+// import "hardhat-gas-reporter"
+// import "hardhat-spdx-license-identifier"
 
 
-import '@typechain/hardhat'
-import '@nomiclabs/hardhat-ethers'
+// import '@typechain/hardhat'
+// import '@nomiclabs/hardhat-ethers'
 
-// import "hardhat-typechain"
+import "@nomicfoundation/hardhat-toolbox";
+import 'hardhat-deploy';
+import '@nomiclabs/hardhat-ethers';
+import 'hardhat-deploy-ethers';
+
+// // import "hardhat-typechain"
 import "hardhat-watcher"
 import "solidity-coverage"
-import "./tasks"
+import "./tasks/index.cts"
 
 import { HardhatUserConfig } from "hardhat/types"
 import { removeConsoleLog } from "hardhat-preprocessor"
@@ -510,11 +515,11 @@ const config: HardhatUserConfig = {
     project: process.env.TENDERLY_PROJECT!,
     username: process.env.TENDERLY_USERNAME!,
   },
-  typechain: {
-    outDir: "types",
-    target: "ethers-v5",
+  // typechain: {
+  //   outDir: "types",
+  //   target: "ethers-v6",
     
-  },
+  // },
   
   watcher: {
     compile: {
