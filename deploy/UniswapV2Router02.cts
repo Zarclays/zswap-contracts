@@ -32,6 +32,7 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
     }
   }
 
+  
   const factoryAddress = (await deployments.get("UniswapV2Factory")).address;
 
   await deploy("UniswapV2Router02", {

@@ -84,7 +84,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.1",
     "@uniswap/v2-core": "1.0.1",
-    "@zarclays/zswap-core-sdk": "^0.1.14",
+    "@zarclays/zswap-core-sdk": "^0.1.21",
     "chai": "^4.3.4",
     "cross-env": "^7.0.0",
     "dotenv": "^8.2.0",

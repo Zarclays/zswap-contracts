@@ -60,6 +60,16 @@ const wethDeployNames= {
     name: 'Wrapped ETH',
     symbol: 'WETH'
   },
+
+  2522: {
+    name: 'frxETH',
+    symbol: 'frxETH'
+  },
+
+  656476:{
+    name: 'Wrapped EDU',
+    symbol: 'wEDU'
+  }
 }
 
 const func = async function ({ getNamedAccounts, deployments }) {
@@ -71,7 +81,7 @@ const func = async function ({ getNamedAccounts, deployments }) {
   console.log('chainId is ', chainId)
   let wethAddress;
 
-  if (chainId === "31337" || chainId === "1337") {
+  if (chainId === "31337" || chainId === "1337" ) {
     await deploy("WETH9", {
         from: deployer,
         args: ["Wrapped ETHER", "WETH"],
@@ -80,7 +90,7 @@ const func = async function ({ getNamedAccounts, deployments }) {
       });
     const weth = await ethers.getContract("WETH9");
     wethAddress = weth.address
-  } else if (chainId in WNATIVE_ADDRESS) {
+  } else if (  chainId in WNATIVE_ADDRESS) {
     
     wethAddress = WNATIVE_ADDRESS[chainId];
     console.log('Using Native WETH ', wethAddress)

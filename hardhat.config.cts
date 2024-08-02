@@ -443,7 +443,47 @@ const config: HardhatUserConfig = {
 			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
 			
 			chainId: 2713017997578000
-		}
+		},
+
+    canto_t: {
+			url: "https://canto-testnet.plexnode.wtf",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 7701,
+		},
+
+		
+
+		"fraxtal": { //fraxtal
+			url: "https://rpc.frax.com",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 252 ,
+			// gasPrice: 350000000,
+			
+			
+		},
+
+		"fraxtal_t": { //fraxtal test
+			url: "https://rpc.testnet.frax.com",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 2522 ,
+			// gasPrice: 350000000,
+		},
+		
+		opencampus: {//Educhain Test
+			url: `https://open-campus-codex-sepolia.drpc.org`,
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 656476 
+		},
+
+		"base_t": { //Base test
+			url: "https://sepolia.base.org",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			chainId: 84532 ,
+			// gasPrice: 350000000,
+			
+			
+		},
+
 
   },
   paths: {
