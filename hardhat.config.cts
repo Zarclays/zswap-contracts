@@ -17,7 +17,7 @@ import "dotenv/config"
 
 import "@nomicfoundation/hardhat-toolbox";
 import 'hardhat-deploy';
-import '@nomiclabs/hardhat-ethers';
+import '@nomicfoundation/hardhat-ethers';
 import 'hardhat-deploy-ethers';
 
 // // import "hardhat-typechain"

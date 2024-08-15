@@ -39,7 +39,7 @@ const func = async function ({
     deterministicDeployment: false, //"0x034deAdFac",
   });
 
-  console.log(deployer, dev)
+  console.log(deployer, dev, ethers)
 
   const factory = await ethers.getContract("UniswapV2Factory");
   const initCodeHash = await factory.pairCodeHash();

@@ -47,7 +47,7 @@ const func = async function ({ ethers, getNamedAccounts, deployments, getChainId
 
   await deploy("SushiMaker", {
     from: deployer,
-    args: [factory.address, bar.address, sushi.address, wethAddress, deployer],
+    args: [await factory.getAddress(), await bar.getAddress(), await sushi.getAddress(), wethAddress, deployer],
     log: true,
     deterministicDeployment: true
   })

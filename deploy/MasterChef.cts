@@ -6,13 +6,13 @@ const func: DeployFunction = async function ({ ethers, deployments, getNamedAcco
 
   const { deployer, dev } = await getNamedAccounts()
 
-  console.log('deployer, dev ', deployer, dev)
+  
 
   const sushi = await ethers.getContract("ZSwapToken")
-  
+  console.log('deployer, dev, sushi ', deployer, dev,await sushi.getAddress())
   const { address } = await deploy("MasterChef", {
     from: deployer,
-    args: [sushi.address, dev, "10000000000000000000", "0", "1000000000000000000000", deployer],
+    args: [await sushi.getAddress(), dev, "10000000000000000000", "0", "1000000000000000000000", deployer],
     log: true,
     deterministicDeployment: true
   })

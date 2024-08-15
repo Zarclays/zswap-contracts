@@ -4,9 +4,9 @@ import "./token.cts";
 import { types, task, subtask } from "hardhat/config.js";
 import { accounts} from "./accounts.cjs";
 import {generateMnemonic} from "./generate-mnemonic.cjs"
-import {migrate} from "./migrate.cjs";
-import {pkFromMnemonic} from "./pk-from-mnemonic.cjs"
 
+import {pkFromMnemonic} from "./pk-from-mnemonic.cjs"
+import { ecsign } from "ethereumjs-util"
 // import  { MINICHEF_ADDRESS } from "@zarclays/zswap-core-sdk";
 let MINICHEF_ADDRESS: any;
 import("@zarclays/zswap-core-sdk").then((zswapCore)=>{
@@ -23,9 +23,10 @@ import fs from "fs";
 import { SignerWithAddress as SignerWithAddressNomicLabs } from "@nomiclabs/hardhat-ethers/signers.js";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers.js";
 
-import { ethers } from "ethers";
+import {MaxUint256, ethers } from "ethers";
+import { getApprovalDigest } from "./utilities.cjs";
 // const fs = require("fs");
-const MaxUint256 = ethers.constants.MaxUint256;
+// const MaxUint256 = ethers.constants.MaxUint256;
 
 
 // function getSortedFiles(dependenciesGraph: any) {
@@ -254,7 +255,7 @@ task("feeder:return", "Return funds to feeder").setAction(async function (
 task("erc20:approve", "ERC20 approve")
   .addParam("token", "Token")
   .addParam("spender", "Spender")
-  .addOptionalParam("deadline", MaxUint256)
+  .addOptionalParam("deadline","Deadline", MaxUint256, types.bigint)
   .setAction(async function (
     { token, spender, deadline },
     { ethers: {  getContractFactory, getNamedSigner }  },
@@ -317,7 +318,7 @@ task("router:add-liquidity", "Router add liquidity")
   .addParam("tokenAMinimum", "Token A Minimum")
   .addParam("tokenBMinimum", "Token B Minimum")
   .addParam("to", "To")
-  .addOptionalParam("deadline", MaxUint256)
+  .addOptionalParam("deadline","deadline", MaxUint256 , types.bigint)
   .setAction(async function (
     {
       tokenA,
@@ -359,7 +360,7 @@ task("router:add-liquidity-eth", "Router add liquidity eth")
   .addParam("tokenMinimum", "Token Minimum")
   .addParam("ethMinimum", "ETH Minimum")
   .addParam("to", "To")
-  .addOptionalParam("deadline", MaxUint256)
+  .addOptionalParam("deadline","deadline",  MaxUint256, types.bigint)
   .setAction(async function (
     { token, tokenDesired, tokenMinimum, ethMinimum, to, deadline },
     { ethers: { getNamedSigner, getContract }, run },
@@ -393,7 +394,89 @@ task("migrate", "Migrates liquidity from Uniswap to SushiSwap")
     "Token B",
     "0xc778417E063141139Fce010982780140Aa0cD5Ab"
   )
-  .setAction(migrate);
+  .setAction(async function (
+    { tokenA, tokenB },
+    { 
+      getChainId, 
+      ethers: {
+        hexlify,
+        getNamedSigner,
+        MaxUint256,
+        Wallet,
+        getContract,
+        getContractFactory,
+      },
+      config,
+      network
+    },
+    runSuper
+  ) {
+    
+    console.log("Migrate", config.networks[network.name].accounts)
+  
+     
+    config.networks[network.name].accounts
+    //@ts-ignore
+    // Dev private key
+    const privateKey = Wallet.fromPhrase(config.networks[network.name].accounts.mnemonic, "m/44'/60'/0'/0/1").privateKey
+  
+    const erc20Contract = await getContractFactory("UniswapV2ERC20")
+  
+    const token = erc20Contract.attach("0x1c5DEe94a34D795f9EEeF830B68B80e44868d316")
+  
+    const deadline = MaxUint256
+  
+    const dev = await getNamedSigner("dev")
+  
+    //@ts-ignore
+    const nonce = await token.connect(dev).nonces(dev.address)
+  
+    const sushiRoll = await getContract("SushiRoll")
+  
+    const chainId = await getChainId()
+  
+    const digest = await getApprovalDigest(
+      token,
+      chainId,
+      {
+        owner: dev.address,
+        spender: sushiRoll.getAddress(),
+        value: await token.balanceOf(dev.address),
+      },
+      nonce,
+      deadline
+    )
+  
+    const { v, r, s } = ecsign(
+      Buffer.from(digest.slice(2), "hex"),
+      Buffer.from(privateKey.slice(2), "hex")
+    )
+  
+    console.log({ v, r: hexlify(r), s: hexlify(s) })
+  
+    const migrateTx = await sushiRoll
+      .connect(dev)
+      //@ts-ignore
+      .migrateWithPermit(
+        tokenA,
+        tokenB,
+        await token.balanceOf(dev.address),
+        0,
+        0,
+        deadline,
+        v,
+        hexlify(r),
+        hexlify(s),
+        {
+          gasLimit: 8000000,
+          gasPrice: 100000000000,
+        }
+      )
+  
+    await migrateTx.wait()
+  
+    console.log(migrateTx)
+  });
 
 task("masterchef:add", "Add pool to masterchef").setAction(async function (
   taskArguments,

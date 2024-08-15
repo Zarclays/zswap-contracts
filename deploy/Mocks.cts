@@ -1,15 +1,17 @@
 import {DeployFunction} from 'hardhat-deploy/types';
 
 
-const func = async function ({ getNamedAccounts, deployments }) {
+const func = async function ({ getNamedAccounts, deployments, getChainId }) {
   const { deploy } = deployments
-
+  const chainId = await getChainId()
   const { deployer } = await getNamedAccounts()
-
-  // await deploy("WETH9Mock", {
-  //   from: deployer,
-  //   log: true,
-  // })
+  if (chainId === '31337' || chainId === '1337') {
+    await deploy("WETH9Mock", {
+      from: deployer,
+      log: true,
+    })
+  } 
+  
 }
 
 export const skip = ({ getChainId }) =>
