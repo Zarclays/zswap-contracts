@@ -17,13 +17,13 @@ npx hardhat node --fork <https://eth-mainnet.alchemyapi.io/v2/API_KEY>
 ## Testing
 
 ```sh
-yarn test
+npx hardhat test
 ```
 
 ### Single files
 
 ```sh
-yarn test test/MasterChef.test.js
+npx hardhat test ./test/MiniChefV3.test.cts
 ```
 
 Mocha & Chai with Waffle matchers (these are really useful).
@@ -43,7 +43,7 @@ npx hardhat run --network localhost scripts/seed.js
 ## Console
 
 ```sh
-yarn console
+npx hardhat console
 
 npx hardhat --network localhost console
 ```
@@ -53,7 +53,7 @@ npx hardhat --network localhost console
 ## Coverage
 
 ```sh
-yarn test:coverage
+npm run test:coverage
 ```
 
 <https://hardhat.org/plugins/solidity-coverage.html#tasks>
@@ -61,7 +61,7 @@ yarn test:coverage
 ## Gas Usage
 
 ```sh
-yarn test:gas
+npm run test:gas
 ```
 
 <https://github.com/cgewecke/hardhat-gas-reporter>
@@ -69,7 +69,7 @@ yarn test:gas
 ## Lint
 
 ```sh
-yarn lint
+npm run lint
 ```
 
 ## Watch

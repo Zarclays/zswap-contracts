@@ -1,6 +1,7 @@
 import { ethers } from "hardhat"
 const { BigNumber } = require("ethers")
 
+
 export const BASE_TEN = 10
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
 
@@ -28,7 +29,7 @@ export async function deploy(thisObject, contracts) {
   for (let i in contracts) {
     let contract = contracts[i]
     thisObject[contract[0]] = await contract[1].deploy(...(contract[2] || []))
-    await thisObject[contract[0]].deployed()
+    // await thisObject[contract[0]].deployed()
   }
 }
 
@@ -45,8 +46,10 @@ export async function createSLP(thisObject, name, tokenA, tokenB, amount) {
   await thisObject[name].mint(thisObject.alice.address)
 }
 // Defaults to e18 using amount * 10^18
-export function getBigNumber(amount, decimals = 18) {
-  return BigNumber.from(amount).mul(BigNumber.from(BASE_TEN).pow(decimals))
+export function getBigInt(amount, decimals = 18) {
+  
+  return BigInt(amount)* BigInt(10) ** BigInt(decimals);
+  // return BigNumber.from(amount).mul(BigNumber.from(BASE_TEN).pow(decimals))
 }
 
 export * from "./time.cts"

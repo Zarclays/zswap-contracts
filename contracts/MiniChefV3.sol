@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.26;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
+import "hardhat/console.sol";
 
 
 
@@ -156,7 +156,10 @@ contract BoringOwnable is BoringOwnableData {
     }
 }
 
-contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
+
+error TokenAlreadyAdded();
+
+contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
     using SafeERC20 for IERC20;
 
     struct UserInfo {
@@ -174,6 +177,8 @@ contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
 
     PoolInfo[] public poolInfo;
     IERC20[] public lpToken;
+    /// @dev Tokens added
+    mapping (address => bool) public addedTokens;
     mapping (uint256 => mapping (address => UserInfo)) public userInfo;
     uint256 public totalAllocPoint;
     uint256 public rewardPerSecond;
@@ -198,11 +203,17 @@ contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
         pools = poolInfo.length;
     }
 
+    /// @notice Add a new LP to the pool. Can only be called by the owner.
+    /// DO NOT add the same LP token more than once. Rewards will be messed up if you do.
+    /// @param allocPoint AP of the new pool.
+    /// @param _lpToken Address of the LP ERC-20 token.
     function add(uint256 allocPoint, IERC20 _lpToken, bool _withUpdate) public onlyOwner {
+        require(addedTokens[address(_lpToken)] == false, TokenAlreadyAdded());
         if (_withUpdate) {
             massUpdatePools();
         }
         uint256 lastRewardTime = block.timestamp;
+        
         totalAllocPoint = totalAllocPoint + allocPoint;
         lpToken.push(_lpToken);
         poolInfo.push(PoolInfo({
@@ -210,6 +221,7 @@ contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
             lastRewardTime: lastRewardTime,
             accRewardPerShare: 0
         }));
+        addedTokens[address(_lpToken)] = true;
         emit LogPoolAddition(lpToken.length - 1, allocPoint, _lpToken);
     }
 
@@ -229,6 +241,14 @@ contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
         uint256 length = poolInfo.length;
         for (uint256 pid = 0; pid < length; ++pid) {
             updatePool(pid);
+        }
+    }
+    /// @notice Update reward variables for all pools. Be careful of gas spending!
+    /// @param pids Pool IDs of all to be updated. Make sure to update all active pools.
+    function massUpdateSelectedPools(uint256[] calldata pids) external {
+        uint256 len = pids.length;
+        for (uint256 i = 0; i < len; ++i) {
+            updatePool(pids[i]);
         }
     }
 
@@ -326,6 +346,7 @@ contract MiniChef is BoringOwnable, ReentrancyGuard, BoringBatchable {
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accRewardPerShare = pool.accRewardPerShare;
         uint256 lpSupply = lpToken[_pid].balanceOf(address(this));
+        
         if (block.timestamp > pool.lastRewardTime && lpSupply != 0) {
             uint256 time = block.timestamp - pool.lastRewardTime;
             uint256 reward = time * rewardPerSecond * pool.allocPoint / totalAllocPoint;

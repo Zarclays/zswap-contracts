@@ -12,7 +12,7 @@ let MINICHEF_ADDRESS: any;
 import("@zarclays/zswap-core-sdk").then((zswapCore)=>{
   //@ts-ignore
   MINICHEF_ADDRESS = zswapCore.MINICHEF_ADDRESS;
-  console.log('MINICHEF_ADDRESS:', MINICHEF_ADDRESS);
+  // console.log('MINICHEF_ADDRESS:', MINICHEF_ADDRESS);
   
 });
 
