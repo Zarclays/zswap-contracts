@@ -158,6 +158,7 @@ contract BoringOwnable is BoringOwnableData {
 
 
 error TokenAlreadyAdded();
+error WithdrawNotGood();
 
 contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
     using SafeERC20 for IERC20;
@@ -283,7 +284,7 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
         PoolInfo memory pool = updatePool(pid);
         UserInfo storage user = userInfo[pid][msg.sender];
 
-        require(user.amount >= amount, "withdraw: not good");
+        require(user.amount >= amount, WithdrawNotGood());
 
         user.rewardDebt = user.rewardDebt - int256(amount * pool.accRewardPerShare / ACC_REWARD_PRECISION);
         user.amount = user.amount - amount;
@@ -327,6 +328,9 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
         emit Harvest(msg.sender, pid, _pendingReward);
     }
 
+    /// @notice Withdraw without caring about rewards. EMERGENCY ONLY.
+    /// @param pid The index of the pool. See `poolInfo`.
+    /// @param to Receiver of the LP tokens.
     function emergencyWithdraw(uint256 pid, address to) public {
         UserInfo storage user = userInfo[pid][msg.sender];
         uint256 amount = user.amount;

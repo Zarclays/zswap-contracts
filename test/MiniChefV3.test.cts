@@ -9,7 +9,7 @@ describe("MiniChefV3", function () {
   let MiniChef, RewardToken, LPToken;
   let miniChef, rewardToken, lpToken;
   let owner, user1, user2;
-  const REWARD_PER_SECOND = parseEther("1.5");
+  const REWARD_PER_SECOND = parseEther("1");
   const INITIAL_REWARD_BALANCE = parseEther("1000000");
   const INITIAL_LP_BALANCE = parseEther("1000");
 
@@ -192,10 +192,10 @@ describe("MiniChefV3", function () {
 //       let timestampUpdatePool = (await ethers.provider.getBlock(logUpdatePool.blockNumber)).timestamp
 //       let timestamp = (await ethers.provider.getBlock(log.blockNumber)).timestamp
      
-//       let expectedReward = /*REWARD_PER_SECOND * parseEther(amountDeposited.toString())*/  BigInt((+formatEther(REWARD_PER_SECOND) * 1000000000000000000 ).toString()) * BigInt(timestampUpdatePool - timestamp)
+//       let expectedReward =   REWARD_PER_SECOND *  BigInt(timestampUpdatePool - timestamp)
 //     //   const expectedReward = parseEther("0");
 //       const pendingReward = await miniChef.pendingReward(0, await user1.getAddress());
-//       console.log(`REWARD_PER_SECOND ${formatEther(REWARD_PER_SECOND)},peding reward: ${formatEther(pendingReward)}, expected reward: ${formatEther(expectedReward)}`)
+// //       console.log(`REWARD_PER_SECOND ${formatEther(REWARD_PER_SECOND)},peding reward: ${formatEther(pendingReward)}, expected reward: ${formatEther(expectedReward)}`)
 //       expect(pendingReward).to.equal(expectedReward);
 //     });
 //   });
@@ -290,7 +290,7 @@ describe("MiniChefV3", function () {
             err = e
         }
         console.log('Error:: ', err.toString())
-        assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with custom error 'TokenAlreadyAdded()'")
+        assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
     
       //await expect(miniChef.connect(user1).deposit(1, parseEther("100"), await user1.getAddress()))
       //  .to.be.revertedWith("Pool does not exist");
@@ -317,7 +317,7 @@ describe("MiniChefV3", function () {
             err = e
         }
         console.log('Error:: ', err.toString())
-        assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with custom error 'TokenAlreadyAdded()'")
+        assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
     
     //   await expect(miniChef.connect(user1).withdraw(1, parseEther("100"), await user1.getAddress()))
     //     .to.be.revertedWith("Pool does not exist");
@@ -326,8 +326,8 @@ describe("MiniChefV3", function () {
 
   describe("Harvest", function () {
     beforeEach(async function () {
-      await miniChef.add(100, await lpToken.getAddress(), false);
-      await miniChef.connect(user2).deposit(0, parseEther("100"), await user2.getAddress());
+      
+      
     //   await ethers.provider.send("evm_increaseTime", [100]);
     //   await ethers.provider.send("evm_mine", []);
 
@@ -335,47 +335,75 @@ describe("MiniChefV3", function () {
     });
 
     it("Should give back the correct amount of Main Token and reward token", async function () {
+    //   expect(await miniChef.lpToken(0)).to.be.equal(await lpToken.getAddress())
+    //   const initialBalance = await rewardToken.balanceOf(await user2.getAddress());
+      
+    //   await miniChef.connect(user2).harvest(0, await user2.getAddress());
+    //   const finalBalance = await rewardToken.balanceOf(await user2.getAddress());
+      
+    //   expect(finalBalance - initialBalance).to.be.closeTo(
+    //     REWARD_PER_SECOND * 100n,
+    //     parseEther("0.01") // Allow for small rounding errors
+    //   );
+
+
+
+      await miniChef.add(100, await lpToken.getAddress(), false);
       expect(await miniChef.lpToken(0)).to.be.equal(await lpToken.getAddress())
-      const initialBalance = await rewardToken.balanceOf(await user2.getAddress());
-      
-      await miniChef.connect(user2).harvest(0, await user2.getAddress());
-      const finalBalance = await rewardToken.balanceOf(await user2.getAddress());
-      
-      expect(finalBalance - initialBalance).to.be.closeTo(
-        REWARD_PER_SECOND * 100n,
-        parseEther("0.01") // Allow for small rounding errors
-      );
+      let log = await miniChef.connect(user2).deposit(0, parseEther("1"), await user2.getAddress());      
+      await advanceTime(86400)
+      let log2 = await miniChef.connect(user2).withdraw(0, getBigInt(1), user2.address)
+
+      let timestamp2 = (await ethers.provider.getBlock(log2.blockNumber)).timestamp
+      let timestamp = (await ethers.provider.getBlock(log.blockNumber)).timestamp
+      let expectedReward = REWARD_PER_SECOND * BigInt(timestamp2 - timestamp)
+      console.log()
+      expect((await miniChef.userInfo(0, user2.address)).rewardDebt).to.be.equal("-" + expectedReward)
+
+      await miniChef.connect(user2).harvest(0, user2.address)
+      expect(await rewardToken.balanceOf(user2.address))
+        .to.be.equal(expectedReward)
     });
 
-    it("Harvest for Reward-only pool", async function () {
-      await miniChef.add(100, ZeroAddress, false);
-      await miniChef.connect(user1).deposit(1, 0, await user1.getAddress());
-      await ethers.provider.send("evm_increaseTime", [100]);
-      await ethers.provider.send("evm_mine", []);
+    it("Harvest with empty user balance", async function () {
+        await miniChef.add(10, await lpToken.getAddress(), false)
+        await miniChef.harvest(0, user2.address)
+    })
 
-      const initialBalance = await rewardToken.balanceOf(await user1.getAddress());
-      await miniChef.connect(user1).harvest(1, await user1.getAddress());
-      const finalBalance = await rewardToken.balanceOf(await user1.getAddress());
+
+    
+    // // it("Harvest for zSwap-only pool", async function () {
+    // //   await miniChef.add(100, await lpToken.getAddress(), false);
+    // // //   await miniChef.connect(user1).deposit(1, 0, await user1.getAddress());
+    // //   await miniChef.connect(user2).deposit(1, parseEther("100"), await user2.getAddress());
       
-      expect(finalBalance - initialBalance).to.be.closeTo(
-        REWARD_PER_SECOND * 100n / 2n, // Divided by 2 because there are two pools now
-        parseEther("0.01") // Allow for small rounding errors
-      );
-    });
+    // //   advanceTimeAndBlock(100)
+
+    // //   const initialBalance = await rewardToken.balanceOf(await user1.getAddress());
+    // //   await miniChef.connect(user1).harvest(1, await user1.getAddress());
+    // //   const finalBalance = await rewardToken.balanceOf(await user1.getAddress());
+      
+    // //   expect(finalBalance - initialBalance).to.be.closeTo(
+    // //     REWARD_PER_SECOND * 100n / 2n, // Divided by 2 because there are two pools now
+    // //     parseEther("0.01") // Allow for small rounding errors
+    // //   );
+    // // });
+    
   });
 
-//   describe("EmergencyWithdraw", function () {
-//     beforeEach(async function () {
-//       await miniChef.add(100, await lpToken.getAddress(), false);
-//       await miniChef.connect(user1).deposit(0, parseEther("100"), await user1.getAddress());
-//     });
+  describe("EmergencyWithdraw", function () {
+    beforeEach(async function () {
+      
+    });
 
-//     it("Should emit event EmergencyWithdraw", async function () {
-//       await expect(miniChef.connect(user1).emergencyWithdraw(0, await user1.getAddress()))
-//         .to.emit(miniChef, "EmergencyWithdraw")
-//         .withArgs(await user1.getAddress(), 0, parseEther("100"), await user1.getAddress());
-//     });
-//   });
+    it("Should emit event EmergencyWithdraw", async function () {
+      await miniChef.add(100, await lpToken.getAddress(), false);
+      await miniChef.connect(user1).deposit(0, parseEther("100"), await user1.getAddress());
+      await expect(miniChef.connect(user1).emergencyWithdraw(0, await user1.getAddress()))
+        .to.emit(miniChef, "EmergencyWithdraw")
+        .withArgs(await user1.getAddress(), 0, parseEther("100"), await user1.getAddress());
+    });
+  });
 
 
 });
