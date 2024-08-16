@@ -9,7 +9,11 @@ describe("MiniChefV3", function () {
   let MiniChef, RewardToken, LPToken;
   let miniChef, rewardToken, lpToken;
   let owner, user1, user2;
-  const REWARD_PER_SECOND = parseEther("1");
+
+  // daily distribution rate: 20 million / (2 years * 365 days) ≈ 27,397 tokens per day per chain.
+  const rewardPerSecond = 27397/(24*60*60)
+  console.log('rewardPerSecond: ', rewardPerSecond)
+  const REWARD_PER_SECOND = parseEther(rewardPerSecond.toString());
   const INITIAL_REWARD_BALANCE = parseEther("1000000");
   const INITIAL_LP_BALANCE = parseEther("1000");
 
@@ -198,7 +202,7 @@ describe("MiniChefV3", function () {
     //   const expectedReward = parseEther("0");
       const pendingReward = await miniChef.pendingReward(0, await user1.getAddress());
 //       console.log(`REWARD_PER_SECOND ${formatEther(REWARD_PER_SECOND)},peding reward: ${formatEther(pendingReward)}, expected reward: ${formatEther(expectedReward)}`)
-      expect(pendingReward).to.equal(expectedReward);
+      expect(pendingReward).to.be.closeTo(expectedReward, parseEther("0.00001"));
     });
   });
 
@@ -346,12 +350,13 @@ describe("MiniChefV3", function () {
       let timestamp2 = (await ethers.provider.getBlock(log2.blockNumber)).timestamp
       let timestamp = (await ethers.provider.getBlock(log.blockNumber)).timestamp
       let expectedReward = REWARD_PER_SECOND * BigInt(timestamp2 - timestamp)
-      console.log()
-      expect((await miniChef.userInfo(0, user2.address)).rewardDebt).to.be.equal("-" + expectedReward)
-
+    //   console.log( 'REW:: ', formatEther((await miniChef.userInfo(0, user2.address)).rewardDebt))
+    //   console.log( 'EXP REW:: ', formatEther(expectedReward))
+      expect((await miniChef.userInfo(0, user2.address)).rewardDebt).to.be.closeTo(("-" + expectedReward), parseEther("0.00001"))
+    // expect(pendingReward).to.be.closeTo(expectedReward, parseEther("0.00001"));
       await miniChef.connect(user2).harvest(0, user2.address)
       expect(await rewardToken.balanceOf(user2.address))
-        .to.be.equal(expectedReward)
+        .to.be.closeTo(expectedReward, parseEther("0.00001"))
     });
 
     it("Harvest with empty user balance", async function () {
