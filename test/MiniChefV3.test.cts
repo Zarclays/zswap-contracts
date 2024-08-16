@@ -57,170 +57,172 @@ describe("MiniChefV3", function () {
     await lpToken.connect(user2).approve(miniChef.getAddress(), MaxUint256);
   });
 
-//   describe("Deployment", function () {
-//     it("Should set the correct reward token", async function () {
-//       expect(await miniChef.REWARD()).to.equal(await rewardToken.getAddress());
-//     });
+  describe("Deployment", function () {
+    it("Should set the correct reward token", async function () {
+      expect(await miniChef.REWARD()).to.equal(await rewardToken.getAddress());
+    });
 
-//     it("Should set the correct reward per second", async function () {
-//       expect(await miniChef.rewardPerSecond()).to.equal(REWARD_PER_SECOND);
-//     });
-//   });
+    it("Should set the correct reward per second", async function () {
+      expect(await miniChef.rewardPerSecond()).to.equal(REWARD_PER_SECOND);
+    });
+  });
 
-//   describe("Pool management", function () {
-//     it("Should add a new pool", async function () {
-//       await miniChef.add(100, lpToken.getAddress(), false);
-//       expect(await miniChef.poolLength()).to.equal(1);
-//     });
+  describe("Pool management", function () {
+    it("Should add a new pool", async function () {
+      await miniChef.add(100, lpToken.getAddress(), false);
+      expect(await miniChef.poolLength()).to.equal(1);
+    });
 
-//     it("Should update pool allocations", async function () {
-//       await miniChef.add(100, lpToken.getAddress(), false);
-//       await miniChef.set(0, 200, false);
-//       const pool = await miniChef.poolInfo(0);
-//       expect(pool.allocPoint).to.equal(200);
-//     });
-//   });
+    it("Should update pool allocations", async function () {
+      await miniChef.add(100, lpToken.getAddress(), false);
+      await miniChef.set(0, 200, false);
+      const pool = await miniChef.poolInfo(0);
+      expect(pool.allocPoint).to.equal(200);
+    });
+  });
 
-//   describe("User interactions", function () {
-//     beforeEach(async function () {
-//       await miniChef.add(100, lpToken.getAddress(), false);
-//     });
+  describe("User interactions", function () {
+    beforeEach(async function () {
+      await miniChef.add(100, lpToken.getAddress(), false);
+    });
 
-//     it("Should allow users to deposit LP tokens", async function () {
-//       const depositAmount = parseEther("100");
-//       await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
-//       const userInfo = await miniChef.userInfo(0, user1.address);
-//       expect(userInfo.amount).to.equal(depositAmount);
-//     });
+    it("Should allow users to deposit LP tokens", async function () {
+      const depositAmount = parseEther("100");
+      await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
+      const userInfo = await miniChef.userInfo(0, user1.address);
+      expect(userInfo.amount).to.equal(depositAmount);
+    });
 
-//     it("Should allow users to withdraw LP tokens", async function () {
-//       const depositAmount = parseEther("100");
-//       await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
-//       await miniChef.connect(user1).withdraw(0, depositAmount, user1.address);
-//       const userInfo = await miniChef.userInfo(0, user1.address);
-//       expect(userInfo.amount).to.equal(0);
-//     });
+    it("Should allow users to withdraw LP tokens", async function () {
+      const depositAmount = parseEther("100");
+      await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
+      await miniChef.connect(user1).withdraw(0, depositAmount, user1.address);
+      const userInfo = await miniChef.userInfo(0, user1.address);
+      expect(userInfo.amount).to.equal(0);
+    });
 
-//     it("Should distribute rewards correctly", async function () {
-//       const depositAmount = parseEther("100");
-//       await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
+    it("Should distribute rewards correctly", async function () {
+      const depositAmount = parseEther("100");
+      await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
       
-//       // Advance time by 100 seconds
-//       await ethers.provider.send("evm_increaseTime", [100]);
-//       await ethers.provider.send("evm_mine");
+      // Advance time by 100 seconds
+      await ethers.provider.send("evm_increaseTime", [100]);
+      await ethers.provider.send("evm_mine");
 
-//       const pendingReward = await miniChef.pendingReward(0, user1.address);
-//       expect(pendingReward).to.be.closeTo(
-//         REWARD_PER_SECOND * BigInt(100),
-//         parseEther("0.01") // Allow for small rounding errors
-//       );
-//     });
+      const pendingReward = await miniChef.pendingReward(0, user1.address);
+      expect(pendingReward).to.be.closeTo(
+        REWARD_PER_SECOND * BigInt(100),
+        parseEther("0.01") // Allow for small rounding errors
+      );
+    });
 
-//     it("Should allow users to harvest rewards", async function () {
-//       const depositAmount = parseEther("100");
-//       await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
+    it("Should allow users to harvest rewards", async function () {
+      const depositAmount = parseEther("100");
+      await miniChef.connect(user1).deposit(0, depositAmount, user1.address);
       
-//       // Advance time by 100 seconds
-//       //   await ethers.provider.send("evm_increaseTime", [100]);
-//       //   await ethers.provider.send("evm_mine");
+      // Advance time by 100 seconds
+      //   await ethers.provider.send("evm_increaseTime", [100]);
+      //   await ethers.provider.send("evm_mine");
 
-//       await advanceTimeAndBlock(100)
-
-//       const initialBalance = await rewardToken.balanceOf(user1.address);
-//       await miniChef.connect(user1).harvest(0, user1.address);
-//       const finalBalance = await rewardToken.balanceOf(user1.address);
-
-//       console.log(`Initil ${formatEther(initialBalance)} , final: ${ formatEther(finalBalance) },  TotRew: ${formatEther(REWARD_PER_SECOND* BigInt(100))}`)
       
-//       expect(finalBalance - initialBalance ).to.be.closeTo(
-//         REWARD_PER_SECOND* BigInt(100),
-//         parseEther("0.1") // Allow for small rounding errors
-//       );
-//     });
-//   });
 
-//   describe("Ownership", function () {
-//     it("Should transfer ownership correctly", async function () {
-//       await miniChef.transferOwnership(user1.address, true, false);
-//       expect(await miniChef.owner()).to.equal(user1.address);
-//     });
+      const initialBalance = await rewardToken.balanceOf(user1.address);
 
-//     it("Should use two-step ownership transfer correctly", async function () {
-//       await miniChef.transferOwnership(user1.address, false, false);
-//       expect(await miniChef.owner()).to.equal(owner.address);
-//       expect(await miniChef.pendingOwner()).to.equal(user1.address);
+      await advanceTime(100)
+      await miniChef.connect(user1).harvest(0, user1.address);
+      const finalBalance = await rewardToken.balanceOf(user1.address);
+
+      console.log(`Initil ${formatEther(initialBalance)} , final: ${ formatEther(finalBalance) },  TotRew: ${formatEther(REWARD_PER_SECOND* BigInt(100))}`)
       
-//       await expect(miniChef.connect(user2).acceptOwnership()).to.be.revertedWith("Ownable: caller != pending owner");
-      
-//       await miniChef.connect(user1).acceptOwnership();
-//       expect(await miniChef.owner()).to.equal(user1.address);
-//       expect(await miniChef.pendingOwner()).to.equal(ADDRESS_ZERO);
-//     });
-//   });
+      expect(finalBalance - initialBalance ).to.be.closeTo(
+        REWARD_PER_SECOND* BigInt(100),
+        parseEther("0.1") // Allow for small rounding errors
+      );
+    });
+  });
 
-//   describe("Set", function () {
-//     it("Should revert if invalid pool", async function () {
-//     //   await expect(miniChef.set(0, 200, false)).to.be.revertedWith("Pool does not exist");
-//       let err
-//       try {
-//         await miniChef.set(0, 200, false)
-//       } catch (e) {
-//         err = e
-//       }
-      
-//       assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
-//     });
+  describe("Ownership", function () {
+    it("Should transfer ownership correctly", async function () {
+      await miniChef.transferOwnership(user1.address, true, false);
+      expect(await miniChef.owner()).to.equal(user1.address);
+    });
 
-//     it("Should emit event LogSetPool", async function () {
-//       await miniChef.add(100, await lpToken.getAddress(), false);
-//       await expect(miniChef.set(0, 200, false))
-//         .to.emit(miniChef, "LogSetPool")
-//         .withArgs(0, 200);
-//     });
-//   });
-
-//   describe("PendingReward", function () {
-//     it("Should equal ExpectedReward when time is lastRewardTime", async function () {
-//       await miniChef.add(100, await lpToken.getAddress(), false);
-//       const amountDeposited=1
-//       let log = await miniChef.connect(user1).deposit(0, parseEther(amountDeposited.toString()), await user1.getAddress());
+    it("Should use two-step ownership transfer correctly", async function () {
+      await miniChef.transferOwnership(user1.address, false, false);
+      expect(await miniChef.owner()).to.equal(owner.address);
+      expect(await miniChef.pendingOwner()).to.equal(user1.address);
       
-//       await advanceTime(86400);
+      await expect(miniChef.connect(user2).acceptOwnership()).to.be.revertedWith("Ownable: caller != pending owner");
+      
+      await miniChef.connect(user1).acceptOwnership();
+      expect(await miniChef.owner()).to.equal(user1.address);
+      expect(await miniChef.pendingOwner()).to.equal(ADDRESS_ZERO);
+    });
+  });
+
+  describe("Set", function () {
+    it("Should revert if invalid pool", async function () {
+    //   await expect(miniChef.set(0, 200, false)).to.be.revertedWith("Pool does not exist");
+      let err
+      try {
+        await miniChef.set(0, 200, false)
+      } catch (e) {
+        err = e
+      }
+      
+      assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
+    });
+
+    it("Should emit event LogSetPool", async function () {
+      await miniChef.add(100, await lpToken.getAddress(), false);
+      await expect(miniChef.set(0, 200, false))
+        .to.emit(miniChef, "LogSetPool")
+        .withArgs(0, 200);
+    });
+  });
+
+  describe("PendingReward", function () {
+    it("Should equal ExpectedReward when time is lastRewardTime", async function () {
+      await miniChef.add(100, await lpToken.getAddress(), false);
+      const amountDeposited=1
+      let log = await miniChef.connect(user1).deposit(0, parseEther(amountDeposited.toString()), await user1.getAddress());
+      
+      await advanceTime(86400);
      
-//       let logUpdatePool = await miniChef.updatePool(0)
+      let logUpdatePool = await miniChef.updatePool(0)
 
-//       let timestampUpdatePool = (await ethers.provider.getBlock(logUpdatePool.blockNumber)).timestamp
-//       let timestamp = (await ethers.provider.getBlock(log.blockNumber)).timestamp
+      let timestampUpdatePool = (await ethers.provider.getBlock(logUpdatePool.blockNumber)).timestamp
+      let timestamp = (await ethers.provider.getBlock(log.blockNumber)).timestamp
      
-//       let expectedReward =   REWARD_PER_SECOND *  BigInt(timestampUpdatePool - timestamp)
-//     //   const expectedReward = parseEther("0");
-//       const pendingReward = await miniChef.pendingReward(0, await user1.getAddress());
-// //       console.log(`REWARD_PER_SECOND ${formatEther(REWARD_PER_SECOND)},peding reward: ${formatEther(pendingReward)}, expected reward: ${formatEther(expectedReward)}`)
-//       expect(pendingReward).to.equal(expectedReward);
-//     });
-//   });
+      let expectedReward =   REWARD_PER_SECOND *  BigInt(timestampUpdatePool - timestamp)
+    //   const expectedReward = parseEther("0");
+      const pendingReward = await miniChef.pendingReward(0, await user1.getAddress());
+//       console.log(`REWARD_PER_SECOND ${formatEther(REWARD_PER_SECOND)},peding reward: ${formatEther(pendingReward)}, expected reward: ${formatEther(expectedReward)}`)
+      expect(pendingReward).to.equal(expectedReward);
+    });
+  });
 
-//   describe("MassUpdatePools", function () {
-//     it("Should call updatePool", async function () {
-//         await miniChef.add(10, await lpToken.getAddress(), false)
-//         await advanceBlockTo(1)
-//         await miniChef.massUpdatePools()
-//         //expect('updatePool').to.be.calledOnContract(); //not suported by hardhat
-//         //expect('updatePool').to.be.calledOnContractWith(0); //not suported by hardhat
-//     })
-//     it("Updating invalid pools should fail", async function () {
-//         let err
-//         try {
-//             await miniChef.massUpdateSelectedPools([0])
-//         } catch (e) {
-//             err = e
-//         }
+  describe("MassUpdatePools", function () {
+    it("Should call updatePool", async function () {
+        await miniChef.add(10, await lpToken.getAddress(), false)
+        await advanceBlockTo(1)
+        await miniChef.massUpdatePools()
+        //expect('updatePool').to.be.calledOnContract(); //not suported by hardhat
+        //expect('updatePool').to.be.calledOnContractWith(0); //not suported by hardhat
+    })
+    it("Updating invalid pools should fail", async function () {
+        let err
+        try {
+            await miniChef.massUpdateSelectedPools([0])
+        } catch (e) {
+            err = e
+        }
     
-//         assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
+        assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
     
-//     //   await expect(miniChef.massUpdateSelectedPools([0])).to.be.revertedWith("panic code 0x32 (Array accessed at an out-of-bounds or negative index)");
-//     });
-//   });
+    //   await expect(miniChef.massUpdateSelectedPools([0])).to.be.revertedWith("panic code 0x32 (Array accessed at an out-of-bounds or negative index)");
+    });
+  });
 
   describe("Add", function () {
     it("Should add pool with reward token multiplier", async function () {
@@ -237,7 +239,7 @@ describe("MiniChefV3", function () {
         } catch (e) {
             err = e
         }
-        console.log('Error:: ', err.toString())
+        
         assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with custom error 'TokenAlreadyAdded()'")
     
       
@@ -289,7 +291,7 @@ describe("MiniChefV3", function () {
         } catch (e) {
             err = e
         }
-        console.log('Error:: ', err.toString())
+        
         assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
     
       //await expect(miniChef.connect(user1).deposit(1, parseEther("100"), await user1.getAddress()))
@@ -316,7 +318,7 @@ describe("MiniChefV3", function () {
         } catch (e) {
             err = e
         }
-        console.log('Error:: ', err.toString())
+        
         assert.equal(err.toString(), "Error: VM Exception while processing transaction: reverted with panic code 0x32 (Array accessed at an out-of-bounds or negative index)")
     
     //   await expect(miniChef.connect(user1).withdraw(1, parseEther("100"), await user1.getAddress()))
@@ -335,19 +337,6 @@ describe("MiniChefV3", function () {
     });
 
     it("Should give back the correct amount of Main Token and reward token", async function () {
-    //   expect(await miniChef.lpToken(0)).to.be.equal(await lpToken.getAddress())
-    //   const initialBalance = await rewardToken.balanceOf(await user2.getAddress());
-      
-    //   await miniChef.connect(user2).harvest(0, await user2.getAddress());
-    //   const finalBalance = await rewardToken.balanceOf(await user2.getAddress());
-      
-    //   expect(finalBalance - initialBalance).to.be.closeTo(
-    //     REWARD_PER_SECOND * 100n,
-    //     parseEther("0.01") // Allow for small rounding errors
-    //   );
-
-
-
       await miniChef.add(100, await lpToken.getAddress(), false);
       expect(await miniChef.lpToken(0)).to.be.equal(await lpToken.getAddress())
       let log = await miniChef.connect(user2).deposit(0, parseEther("1"), await user2.getAddress());      
