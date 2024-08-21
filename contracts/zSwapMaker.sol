@@ -1,21 +1,30 @@
 // SPDX-License-Identifier: MIT
 
 // P1 - P3: OK
-pragma solidity 0.6.12;
-import "./libraries/SafeMath.sol";
-import "./libraries/SafeERC20.sol";
+pragma solidity ^0.8.26;
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "./uniswapv2/interfaces/IUniswapV2ERC20.sol";
 import "./uniswapv2/interfaces/IUniswapV2Pair.sol";
 import "./uniswapv2/interfaces/IUniswapV2Factory.sol";
 
-import "./Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+error InvalidPair();
+error InvalidBridge();
+error MustUseEOA();
+error CannotConvert();
 
 // SushiMaker is MasterChef's left hand and kinda a wizard. He can cook up ZSwap from pretty much anything!
 // This contract handles "serving up" rewards for xZSwap holders by trading tokens collected from fees for ZSwap.
+// This Contract reeives the treasury fee collected (0.05%) , coverts it to Sushi that can then be 
+// sent to SushiBar for zSwap stakers
 
 // T1 - T4: OK
-contract SushiMaker is Ownable {
+contract zSwapMaker is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -26,7 +35,7 @@ contract SushiMaker is Ownable {
     address public immutable bar;
     //0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272
     // V1 - V5: OK
-    address private immutable sushi;
+    address private immutable zSwap;
     //0x6B3595068778DD592e39A122f4f5a5cF09C90fE2
     // V1 - V5: OK
     address private immutable weth;
@@ -50,16 +59,16 @@ contract SushiMaker is Ownable {
     constructor(
         address _factory,
         address _bar,
-        address _sushi,
+        address _zSwap,
         address _weth,
         address owner
     ) public {
         factory = IUniswapV2Factory(_factory);
         bar = _bar;
-        sushi = _sushi;
+        zSwap = _zSwap;
         weth = _weth;
 
-        transferOwnership(owner,true,false);
+        _transferOwnership(owner);
     }
 
     // F1 - F10: OK
@@ -76,8 +85,8 @@ contract SushiMaker is Ownable {
     function setBridge(address token, address bridge) external onlyOwner {
         // Checks
         require(
-            token != sushi && token != weth && token != bridge,
-            "SushiMaker: Invalid bridge"
+            token != zSwap && token != weth && token != bridge,
+            InvalidBridge()
         );
 
         // Effects
@@ -90,7 +99,7 @@ contract SushiMaker is Ownable {
     // C6: It's not a fool proof solution, but it prevents flash loans, so here it's ok to use tx.origin
     modifier onlyEOA() {
         // Try to make flash-loan exploit harder to do by only allowing externally owned addresses.
-        require(msg.sender == tx.origin, "SushiMaker: must use EOA");
+        require(msg.sender == tx.origin, MustUseEOA());
         _;
     }
 
@@ -100,7 +109,7 @@ contract SushiMaker is Ownable {
     //     As the size of the SushiBar has grown, this requires large amounts of funds and isn't super profitable anymore
     //     The onlyEOA modifier prevents this being done with a flash loan.
     // C1 - C24: OK
-    function convert(address token0, address token1) external onlyEOA() {
+    function convert(address token0, address token1) external onlyEOA() nonReentrant {
         _convert(token0, token1);
     }
 
@@ -124,7 +133,7 @@ contract SushiMaker is Ownable {
         // Interactions
         // S1 - S4: OK
         IUniswapV2Pair pair = IUniswapV2Pair(factory.getPair(token0, token1));
-        require(address(pair) != address(0), "SushiMaker: Invalid pair");
+        require(address(pair) != address(0), InvalidPair());//"SushiMaker: Invalid pair"
         // balanceOf: S1 - S4: OK
         // transfer: X1 - X5: OK
         IERC20(address(pair)).safeTransfer(
@@ -158,8 +167,8 @@ contract SushiMaker is Ownable {
         // Interactions
         if (token0 == token1) {
             uint256 amount = amount0.add(amount1);
-            if (token0 == sushi) {
-                IERC20(sushi).safeTransfer(bar, amount);
+            if (token0 == zSwap) {
+                IERC20(zSwap).safeTransfer(bar, amount);
                 sushiOut = amount;
             } else if (token0 == weth) {
                 sushiOut = _toSUSHI(weth, amount);
@@ -168,13 +177,13 @@ contract SushiMaker is Ownable {
                 amount = _swap(token0, bridge, amount, address(this));
                 sushiOut = _convertStep(bridge, bridge, amount, 0);
             }
-        } else if (token0 == sushi) {
+        } else if (token0 == zSwap) {
             // eg. SUSHI - ETH
-            IERC20(sushi).safeTransfer(bar, amount0);
+            IERC20(zSwap).safeTransfer(bar, amount0);
             sushiOut = _toSUSHI(token1, amount1).add(amount0);
-        } else if (token1 == sushi) {
+        } else if (token1 == zSwap) {
             // eg. USDT - SUSHI
-            IERC20(sushi).safeTransfer(bar, amount1);
+            IERC20(zSwap).safeTransfer(bar, amount1);
             sushiOut = _toSUSHI(token0, amount0).add(amount1);
         } else if (token0 == weth) {
             // eg. ETH - USDC
@@ -232,7 +241,7 @@ contract SushiMaker is Ownable {
         // X1 - X5: OK
         IUniswapV2Pair pair =
             IUniswapV2Pair(factory.getPair(fromToken, toToken));
-        require(address(pair) != address(0), "SushiMaker: Cannot convert");
+        require(address(pair) != address(0), CannotConvert());//"SushiMaker: Cannot convert"
 
         // Interactions
         // X1 - X5: OK
@@ -262,6 +271,6 @@ contract SushiMaker is Ownable {
         returns (uint256 amountOut)
     {
         // X1 - X5: OK
-        amountOut = _swap(token, sushi, amountIn, bar);
+        amountOut = _swap(token, zSwap, amountIn, bar);
     }
 }

@@ -35,12 +35,17 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
   
   const factoryAddress = (await deployments.get("UniswapV2Factory")).address;
 
-  await deploy("UniswapV2Router02", {
+
+  // console.log('deploying router with ', (chainId === '42220' || chainId === '44787') ? "UniswapV2Router02Celo" : "UniswapV2Router02" )
+
+  await deploy((chainId === '42220' || chainId === '44787') ? "UniswapV2Router02Celo" : "UniswapV2Router02", {
     from: deployer,
     args: [factoryAddress, wethAddress],
     log: true,
-    deterministicDeployment: false // "0xdfeac320912098",
+    deterministicDeployment: false,
   });
+
+
 };
 
 func.tags = ["UniswapV2Router02", "AMM"];

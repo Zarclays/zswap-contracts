@@ -200,8 +200,8 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
         transferOwnership(owner, true,false);
     }
 
-    function poolLength() public view returns (uint256 pools) {
-        pools = poolInfo.length;
+    function poolLength() public view returns (uint256 ) {
+        return poolInfo.length;
     }
 
     /// @notice Add a new LP to the pool. Can only be called by the owner.

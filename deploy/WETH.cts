@@ -100,7 +100,7 @@ const func = async function ({ getNamedAccounts, deployments }) {
     console.log('wethInChain: ',wethInChain)
     if(wethInChain){
       console.log('Deploying WETH ')
-      console.log(wethInChain)
+      // console.log(wethInChain)
       await deploy("WETH9", {
         from: deployer,
         args: [wethInChain.name, wethInChain.symbol],

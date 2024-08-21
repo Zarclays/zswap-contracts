@@ -45,21 +45,21 @@ const func = async function ({ ethers, getNamedAccounts, deployments, getChainId
   }
 
 
-  await deploy("SushiMaker", {
+  await deploy("zSwapMaker", {
     from: deployer,
     args: [await factory.getAddress(), await bar.getAddress(), await sushi.getAddress(), wethAddress, deployer],
     log: true,
     deterministicDeployment: true
   })
 
-  const maker = await ethers.getContract("SushiMaker")
+  const maker = await ethers.getContract("zSwapMaker")
   if (await maker.owner() !== dev) {
     console.log("Setting maker owner")
     await (await maker.transferOwnership(dev, true, false)).wait()
   }
 }
 
-func.tags = ["SushiMaker"]
+func.tags = ["zSwapMaker"]
 func.dependencies = ["UniswapV2Factory","WETH", "UniswapV2Router02", "SushiBar", "ZSwapToken"]
 
 export default func

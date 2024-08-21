@@ -44,9 +44,32 @@ const func: DeployFunction = async function ({ ethers, deployments, getNamedAcco
   });
 
   const miniChefV3 = await ethers.getContract("MiniChefV3");
+    
   if ((await miniChefV3.owner()) !== dev) {
     console.log("Transfer ownership of MiniChef to dev");
     await (await miniChefV3.transferOwnership(dev, true, false)).wait();
+  }
+
+  console.log("Owner:  ", await miniChefV3.owner());
+  console.log("deployer:  ", deployer, ", dev: ", dev);
+  if (chainId == '31337') {
+    console.log("Adding Lp1 and L2 start ");
+    const lp1 = await deploy("TestToken2", {
+      from: deployer,
+      log: true,
+      args: [deployer, 'LP Token 1', 'LPTOKEN1'],
+      deterministicDeployment: false
+    })
+  
+    const lp2 = await deploy("TestToken2", {
+      from: deployer,
+      log: true,
+      args: [deployer, 'LP Token 2', 'LPTOKEN2'],
+      deterministicDeployment: false
+    })
+    console.log("Adding Lp1 and L2 - devevve", lp1.address, lp2.address, (await ethers.getNamedSigner("dev")).address);
+    await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(150, lp1.address, false)).wait();
+    await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(50, lp2.address, true)).wait();
   }
 
 };
