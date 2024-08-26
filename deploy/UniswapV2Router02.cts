@@ -36,7 +36,7 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
   const factoryAddress = (await deployments.get("UniswapV2Factory")).address;
 
 
-  // console.log('deploying router with ', (chainId === '42220' || chainId === '44787') ? "UniswapV2Router02Celo" : "UniswapV2Router02" )
+  console.log('deploying router fro deployer address:  ', deployer )
 
   await deploy((chainId === '42220' || chainId === '44787') ? "UniswapV2Router02Celo" : "UniswapV2Router02", {
     from: deployer,

@@ -31,3 +31,6 @@ Init Code hash for chain 31337 -> 0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c5
 Init Code hash for chain 44787 -> 0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303 
 Init Code hash for chain 44787 -> 0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303 
 Init Code hash for chain 44787 -> 0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303 
+Init Code hash for chain 31337 -> 0x500602df3902ccaf06fdb0e53389c41ae4bd8a362de2136119d1d8e41b9cff64 
+Init Code hash for chain 44787 -> 0x6d891f706cdc9eadd0dfd18f133157bcba92e5e5287d823d804c43ede3c94fd3 
+Init Code hash for chain 44787 -> 0x6d891f706cdc9eadd0dfd18f133157bcba92e5e5287d823d804c43ede3c94fd3 

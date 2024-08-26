@@ -29,10 +29,10 @@ const func = async function ({
   const feeToSetter='0x5663b6cdbb0dd72ba348671af5bdb81baaa633df'
 
   await deploy("UniswapV2Factory", {
-    contract: {
-      abi,
-      bytecode,
-    },
+    // contract: {
+    //   abi,
+    //   bytecode,
+    // },
     from: deployer,
     args: [deployer],
     log: true,

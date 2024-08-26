@@ -17,7 +17,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
     address public immutable override WETH;
 
     modifier ensure(uint256 deadline) {
-        require(deadline >= block.timestamp, "UniswapV2Router: EXPIRED");
+        require(deadline >= block.timestamp, "U2R:EXPIRED");
         _;
     }
 
@@ -59,7 +59,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
             if (amountBOptimal <= amountBDesired) {
                 require(
                     amountBOptimal >= amountBMin,
-                    "UniswapV2Router: INSUFFICIENT_B_AMOUNT"
+                    "U2R:INSUFFICIENT_B_AMOUNT"
                 );
                 (amountA, amountB) = (amountADesired, amountBOptimal);
             } else {
@@ -71,7 +71,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
                 assert(amountAOptimal <= amountADesired);
                 require(
                     amountAOptimal >= amountAMin,
-                    "UniswapV2Router: INSUFFICIENT_A_AMOUNT"
+                    "U2R:INSUFFICIENT_A_AMOUNT"
                 );
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
             }
@@ -165,11 +165,11 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
             : (amount1, amount0);
         require(
             amountA >= amountAMin,
-            "UniswapV2Router: INSUFFICIENT_A_AMOUNT"
+            "U2R:INSUFFICIENT_A_AMOUNT"
         );
         require(
             amountB >= amountBMin,
-            "UniswapV2Router: INSUFFICIENT_B_AMOUNT"
+            "U2R:INSUFFICIENT_B_AMOUNT"
         );
     }
 
@@ -370,7 +370,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         amounts = UniswapV2Library.getAmountsOut(factory, amountIn, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
@@ -397,7 +397,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         amounts = UniswapV2Library.getAmountsIn(factory, amountOut, path);
         require(
             amounts[0] <= amountInMax,
-            "UniswapV2Router: EXCESSIVE_INPUT_AMOUNT"
+            "U2R:EXCESSIVE_INPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
@@ -421,11 +421,11 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[0] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[0] == WETH, "U2R:INVALID_PATH");
         amounts = UniswapV2Library.getAmountsOut(factory, msg.value, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransfer(
             WETH,
@@ -448,11 +448,11 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[path.length - 1] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[path.length - 1] == WETH, "U2R:INVALID_PATH");
         amounts = UniswapV2Library.getAmountsIn(factory, amountOut, path);
         require(
             amounts[0] <= amountInMax,
-            "UniswapV2Router: EXCESSIVE_INPUT_AMOUNT"
+            "U2R:EXCESSIVE_INPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
@@ -477,11 +477,11 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[path.length - 1] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[path.length - 1] == WETH, "U2R:INVALID_PATH");
         amounts = UniswapV2Library.getAmountsOut(factory, amountIn, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransferFrom(
             path[0],
@@ -506,11 +506,11 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        require(path[0] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[0] == WETH, "U2R:INVALID_PATH");
         amounts = UniswapV2Library.getAmountsIn(factory, amountOut, path);
         require(
             amounts[0] <= msg.value,
-            "UniswapV2Router: EXCESSIVE_INPUT_AMOUNT"
+            "U2R:EXCESSIVE_INPUT_AMOUNT"
         );
         TransferHelper.safeTransfer(
             WETH,
@@ -583,7 +583,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
             IERC20Uniswap(path[path.length - 1]).balanceOf(to).sub(
                 balanceBefore
             ) >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
     }
 
@@ -593,7 +593,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         address to,
         uint256 deadline
     ) external payable virtual override ensure(deadline) {
-        require(path[0] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[0] == WETH, "U2R:INVALID_PATH");
         uint256 amountIn = msg.value;
         TransferHelper.safeTransfer(
             WETH,
@@ -609,7 +609,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
             IERC20Uniswap(path[path.length - 1]).balanceOf(to).sub(
                 balanceBefore
             ) >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
     }
 
@@ -620,7 +620,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         address to,
         uint256 deadline
     ) external virtual override ensure(deadline) {
-        require(path[path.length - 1] == WETH, "UniswapV2Router: INVALID_PATH");
+        require(path[path.length - 1] == WETH, "U2R:INVALID_PATH");
         TransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
@@ -631,7 +631,7 @@ contract UniswapV2Router02Celo is IUniswapV2Router02 {
         uint256 amountOut = IERC20Uniswap(WETH).balanceOf(address(this));
         require(
             amountOut >= amountOutMin,
-            "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"
+            "U2R:INSUFFICIENT_OUTPUT_AMOUNT"
         );
         TransferHelper.safeTransfer(WETH, to, amountOut);
     }
