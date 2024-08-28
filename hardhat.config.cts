@@ -484,6 +484,12 @@ const config: HardhatUserConfig = {
 			
 		},
 
+    galadriel_t: {
+			chainId: 696969,
+			url: "https://devnet.galadriel.com/",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+		},
+
 
   },
   paths: {

@@ -24,9 +24,14 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
 
   if (chainId in WNATIVE_ADDRESS) {
     wethAddress = WNATIVE_ADDRESS[chainId];
-  } else {
-    const weth = await ethers.getContract("WETH9");
-    wethAddress = weth.address
+  } 
+  else if(chainId=='1115'){
+    wethAddress='0x4530f5E2dA67384eC4d86Fa78020602CDb40e7b5'
+  }
+  else {
+    // const weth = await ethers.getContract("WETH9");
+    // wethAddress = weth.address
+    wethAddress=(await deployments.get("WETH9")).address;
     if(!wethAddress){
       throw Error("No WNATIVE!");
     }
