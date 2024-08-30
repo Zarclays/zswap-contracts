@@ -302,6 +302,9 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
 
         user.rewardDebt = accumulatedReward;
 
+        console.log("balanceOf %d  ", REWARD.balanceOf(address(this)) );
+        console.log("pendingreward: %d, accumulatedReward %d  ", _pendingReward, uint256(accumulatedReward) );
+
         if (_pendingReward != 0) {
             REWARD.safeTransfer(to, _pendingReward);
         }

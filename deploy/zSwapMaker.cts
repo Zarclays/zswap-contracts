@@ -28,7 +28,7 @@ const func = async function ({ ethers, getNamedAccounts, deployments, getChainId
   let wethAddress;
   
   if (chainId === '31337' || chainId === '1337') {
-    wethAddress = (await deployments.get("WETH9Mock")).address
+    wethAddress = (await deployments.get("WETH9")).address
   } 
   else if (chainId in WETH9_ADDRESS) {
     wethAddress = WETH9_ADDRESS[chainId]
@@ -55,7 +55,7 @@ const func = async function ({ ethers, getNamedAccounts, deployments, getChainId
   const maker = await ethers.getContract("zSwapMaker")
   if (await maker.owner() !== dev) {
     console.log("Setting maker owner")
-    await (await maker.transferOwnership(dev, true, false)).wait()
+    await (await maker.transferOwnership(dev)).wait()
   }
 }
 

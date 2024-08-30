@@ -7,7 +7,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   bytecode,
   abi,
-} from "../deployments/localhost/UniswapV2Factory.json"
+} from "../deployments/localhost-factory-abi/UniswapV2Factory.json"
 
 import fs from 'fs';
 
@@ -26,7 +26,7 @@ const func = async function ({
 
   const chainId = await getChainId();
 
-  const feeToSetter='0x5663b6cdbb0dd72ba348671af5bdb81baaa633df'
+  const feeToSetter=deployer; //'0x5663b6cdbb0dd72ba348671af5bdb81baaa633df'
 
   await deploy("UniswapV2Factory", {
     contract: {
@@ -53,9 +53,32 @@ const func = async function ({
 
   // await factory.connect("dev").setFeeTo(feeTo)
   try{
-    await factory.connect(await ethers.getNamedSigner("dev")).setFeeTo(feeToSetter)
-  }catch{
+
+    const chainsToUseZSwapFeeReceiver=[
+      31337,
+      44787,
+
+    ]
+    console.log(chainId)
+    if(chainsToUseZSwapFeeReceiver.some(s=>s== +chainId)){
+      let feeReceiver = await deploy("zSwapFeeReceiver", {        
+        from: deployer,
+        args: [],
+        log: true,
+        deterministicDeployment: false, //"0x034deAdFac",
+      });
+      
+      await factory.setFeeTo(feeReceiver.address);
+        // .connect(await ethers.getNamedSigner("dev"))
+        
+    }else{
+      await factory.setFeeTo(feeToSetter);
+        // .connect(await ethers.getNamedSigner("dev"))
+        
+    }
     
+  }catch(err1){
+    console.error("Error setting FeeTo: ", err1)
   }
   //// await (
   //   await factory

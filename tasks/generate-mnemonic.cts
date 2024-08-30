@@ -8,12 +8,14 @@
 
 export async function generateMnemonic (taskArguments, hre, runSuper) {
 
-  const  { Wallet, utils } = hre.ethers;
-
+  const  { Wallet,randomBytes,  Mnemonic } = hre.ethers;
   
-const wallet = Wallet.fromMnemonic(
-    utils.entropyToMnemonic(utils.randomBytes(32))
+  
+  const wallet = Wallet.fromPhrase(
+    Mnemonic.entropyToPhrase(randomBytes(32))
   )
+
+  // ethers.Mnemonic.entropyToPhrase(ethers.randomBytes(16));
   
   console.log('wallet.address:', wallet.address)
   console.log('wallet.mnemonic.phrase:', wallet.mnemonic.phrase)

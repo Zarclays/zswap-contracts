@@ -28,8 +28,11 @@ import "./tasks/index.cts"
 import { HardhatUserConfig } from "hardhat/types"
 import { removeConsoleLog } from "hardhat-preprocessor"
 
-const accounts = {
-  mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
+if(!process.env.MNEMONIC){
+  throw new Error('No Mnemonic set')
+}
+const liveDeploymentAccount = {
+  mnemonic: process.env.MNEMONIC //  || "test test test test test test test test test test test junk",
   // accountsBalance: "990000000000000000000",
 }
 
@@ -81,7 +84,7 @@ const config: HardhatUserConfig = {
   networks: {
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
+      accounts: liveDeploymentAccount,
       gasPrice: 120 * 1000000000,
       chainId: 1,
     },
@@ -89,6 +92,7 @@ const config: HardhatUserConfig = {
       live: false,
       saveDeployments: true,
       tags: ["local"],
+      accounts: liveDeploymentAccount,
     },
     hardhat: {
       forking: {
@@ -115,7 +119,7 @@ const config: HardhatUserConfig = {
 
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 3,
       live: true,
       saveDeployments: true,
@@ -123,39 +127,11 @@ const config: HardhatUserConfig = {
       gasPrice: 5000000000,
       gasMultiplier: 2,
     },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
-      chainId: 4,
-      live: true,
-      saveDeployments: true,
-      tags: ["staging"],
-      gasPrice: 5000000000,
-      gasMultiplier: 2,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
-      chainId: 5,
-      live: true,
-      saveDeployments: true,
-      tags: ["staging"],
-      gasPrice: 5000000000,
-      gasMultiplier: 2,
-    },
-    kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
-      chainId: 42,
-      live: true,
-      saveDeployments: true,
-      tags: ["staging"],
-      gasPrice: 20000000000,
-      gasMultiplier: 2,
-    },
+    
+    
     moonbase: {
       url: "https://rpc.testnet.moonbeam.network",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 1287,
       live: true,
       saveDeployments: true,
@@ -165,7 +141,7 @@ const config: HardhatUserConfig = {
     },
     fantom: {
       url: "https://rpcapi.fantom.network",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 250,
       live: true,
       saveDeployments: true,
@@ -173,7 +149,7 @@ const config: HardhatUserConfig = {
     },
     "fantom-testnet": {
       url: "https://rpc.testnet.fantom.network",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 4002,
       live: true,
       saveDeployments: true,
@@ -182,14 +158,17 @@ const config: HardhatUserConfig = {
     },
     matic: {
       url: "https://rpc-mainnet.maticvigil.com",
-      accounts,
+      accounts: {
+        ...liveDeploymentAccount,
+        // path: "m/44'/966'/0'"
+      },
       chainId: 137,
       live: true,
       saveDeployments: true,
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 80001,
       live: true,
       saveDeployments: true,
@@ -198,21 +177,21 @@ const config: HardhatUserConfig = {
     },
     xdai: {
       url: "https://rpc.xdaichain.com",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 100,
       live: true,
       saveDeployments: true,
     },
     bsc: {
       url: "https://bsc-dataseed.binance.org",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 56,
       live: true,
       saveDeployments: true,
     },
     "bsc-testnet": {
       url: "https://data-seed-prebsc-2-s3.binance.org:8545",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 97,
       live: true,
       saveDeployments: true,
@@ -221,14 +200,14 @@ const config: HardhatUserConfig = {
     },
     heco: {
       url: "https://http-mainnet.hecochain.com",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 128,
       live: true,
       saveDeployments: true,
     },
     "heco-testnet": {
       url: "https://http-testnet.hecochain.com",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 256,
       live: true,
       saveDeployments: true,
@@ -237,7 +216,7 @@ const config: HardhatUserConfig = {
     },
     avalanche: {
       url: "https://api.avax.network/ext/bc/C/rpc",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 43114,
       live: true,
       saveDeployments: true,
@@ -245,7 +224,7 @@ const config: HardhatUserConfig = {
     },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 43113,
       live: true,
       saveDeployments: true,
@@ -254,7 +233,7 @@ const config: HardhatUserConfig = {
     },
     harmony: {
       url: "https://api.s0.t.hmny.io",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 1666600000,
       live: true,
       saveDeployments: true,
@@ -262,7 +241,7 @@ const config: HardhatUserConfig = {
     },
     "harmony-testnet": {
       url: "https://api.s0.b.hmny.io",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 1666700000,
       live: true,
       saveDeployments: true,
@@ -271,14 +250,14 @@ const config: HardhatUserConfig = {
     },
     okex: {
       url: "https://exchainrpc.okex.org",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 66,
       live: true,
       saveDeployments: true,
     },
     "okex-testnet": {
       url: "https://exchaintestrpc.okex.org",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 65,
       live: true,
       saveDeployments: true,
@@ -287,7 +266,7 @@ const config: HardhatUserConfig = {
     },
     arbitrum: {
       url: "https://arb1.arbitrum.io/rpc",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 42161,
       live: true,
       saveDeployments: true,
@@ -295,7 +274,7 @@ const config: HardhatUserConfig = {
     },
     "arbitrum-testnet": {
       url: "https://kovan3.arbitrum.io/rpc",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 79377087078960,
       live: true,
       saveDeployments: true,
@@ -304,28 +283,28 @@ const config: HardhatUserConfig = {
     },
     celo: {
       url: "https://forno.celo.org",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 42220,
       live: true,
       saveDeployments: true,
     },
-    "celo_t": {// alfajores
+    celo_t: {// alfajores
       url: "https://alfajores-forno.celo-testnet.org",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 44787,
       live: true,
       saveDeployments: true,
     },
     palm: {
       url: "https://palm-mainnet.infura.io/v3/da5fbfafcca14b109e2665290681e267",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 11297108109,
       live: true,
       saveDeployments: true,
     },
     "palm-testnet": {
       url: "https://palm-testnet.infura.io/v3/da5fbfafcca14b109e2665290681e267",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 11297108099,
       live: true,
       saveDeployments: true,
@@ -334,52 +313,50 @@ const config: HardhatUserConfig = {
     },
     moonriver: {
       url: "https://rpc.moonriver.moonbeam.network",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 1285,
       live: true,
       saveDeployments: true,
     },
     fuse: {
       url: "https://rpc.fuse.io",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 122,
       live: true,
       saveDeployments: true,
     },
     clover: {
       url: "https://rpc-ivy.clover.finance",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 1024,
       live: true,
       saveDeployments: true,
     },
     telos: {
       url: "https://rpc1.us.telos.net/evm",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 40,
       live: true,
       saveDeployments: true,
     },
     moonbeam: {
       url: "https://rpc.api.moonbeam.network",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 1284,
       live: true,
       saveDeployments: true,
-    },
-
-    
+    }, 
 
     mantle: {
       url: "https://rpc.mantle.xyz",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 5000,
       live: true,
       saveDeployments: true,
     },
     mantle_t: {
       url: "https://rpc.testnet.mantle.xyz/",
-      accounts,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 5001,
       live: true,
       tags: ["staging"],
@@ -387,7 +364,7 @@ const config: HardhatUserConfig = {
 
     scroll: {
       url: "https://1rpc.io/scroll",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 534352,
       live: true,
       saveDeployments: true,
@@ -396,7 +373,7 @@ const config: HardhatUserConfig = {
 
 		scroll_sepolia: { //Scroll Sepolia
 			url: "https://sepolia-rpc.scroll.io",
-			accounts,
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 534351,
       saveDeployments: true,
       tags: ["staging"],
@@ -404,7 +381,7 @@ const config: HardhatUserConfig = {
 
     findora: {
       url: "https://rpc-mainnet.findora.org",
-      accounts,
+      accounts: liveDeploymentAccount,
       chainId: 2152,
       live: true,
       saveDeployments: true,
@@ -412,42 +389,44 @@ const config: HardhatUserConfig = {
 		}, 
 		findora_t: {
 			url: "https://prod-testnet.prod.findora.org:8545",
-			accounts,
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 2153,
       saveDeployments: true,
       tags: ["staging"],
 		},
     meter_testnet: {
 			url: "https://rpctest.meter.io",
-			accounts,
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 83,
 		},
 		meter: {
 			url: "https://rpc.meter.io",
-			accounts,
+			accounts: liveDeploymentAccount,
 			chainId: 82,
+      live: true
 		},
 
     core_testnet: {
 			url: "https://rpc.test.btcs.network/",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 1115,
 		},
 		core: {
 			url: "https://rpc.coredao.org/",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: liveDeploymentAccount,
 			chainId: 1116,
+      live: true
 		},
 		dchain_t:{
 			url: "https://dchaintestnet-2713017997578000-1.jsonrpc.testnet.sagarpc.io",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			
 			chainId: 2713017997578000
 		},
 
     canto_t: {
 			url: "https://canto-testnet.plexnode.wtf",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 7701,
 		},
 
@@ -455,39 +434,55 @@ const config: HardhatUserConfig = {
 
 		"fraxtal": { //fraxtal
 			url: "https://rpc.frax.com",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: liveDeploymentAccount,
+      live: true,
 			chainId: 252 ,
 			// gasPrice: 350000000,
 			
 			
 		},
 
-		"fraxtal_t": { //fraxtal test
+		fraxtal_t: { //fraxtal test
 			url: "https://rpc.testnet.frax.com",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 2522 ,
 			// gasPrice: 350000000,
 		},
 		
 		opencampus: {//Educhain Test
 			url: `https://open-campus-codex-sepolia.drpc.org`,
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 656476 
 		},
 
-		"base_t": { //Base test
+		base_t: { //Base test
 			url: "https://sepolia.base.org",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 			chainId: 84532 ,
 			// gasPrice: 350000000,
 			
 			
 		},
+    base: { //Base
+			url: "https://mainnet.base.org",
+			accounts: liveDeploymentAccount,
+      live: true,
+			chainId: 8453 ,
+			// gasPrice: 350000000,
+			
+			
+		},
+
+    galadriel: {
+			chainId: 696969,
+			url: "https://devnet.galadriel.com/",
+			accounts: liveDeploymentAccount
+		},
 
     galadriel_t: {
 			chainId: 696969,
 			url: "https://devnet.galadriel.com/",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2] : [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 		},
 
 

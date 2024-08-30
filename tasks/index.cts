@@ -160,7 +160,14 @@ import { getApprovalDigest } from "./utilities.cjs";
 //   });
 
 
-task("accounts", "Prints the list of accounts", accounts);
+task("accounts", "Prints the list of accounts", accounts)
+  .addOptionalParam(
+    "networkName",
+    "Name of network in Hardhat config",
+    "mainnet"
+  );
+
+
 task("gas-price", "Prints gas price").setAction(async function (
   { address },
   { ethers }
