@@ -190,13 +190,16 @@ const config: HardhatUserConfig = {
       saveDeployments: true,
     },
     "bsc-testnet": {
-      url: "https://data-seed-prebsc-2-s3.binance.org:8545",
+      url: `https://bsc-testnet.infura.io/v3/${process.env.INFURA_API_KEY}`, //"https://data-seed-prebsc-2-s3.binance.org:8545",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       chainId: 97,
       live: true,
       saveDeployments: true,
       tags: ["staging"],
       gasMultiplier: 2,
+      // gas: 20000000
+      gasPrice: 8000000000, // default is 'auto' which breaks chains without the london hardfork
+      
     },
     heco: {
       url: "https://http-mainnet.hecochain.com",
@@ -287,6 +290,7 @@ const config: HardhatUserConfig = {
       chainId: 42220,
       live: true,
       saveDeployments: true,
+      gasMultiplier:2
     },
     celo_t: {// alfajores
       url: "https://alfajores-forno.celo-testnet.org",
@@ -472,6 +476,12 @@ const config: HardhatUserConfig = {
 			
 			
 		},
+
+    op_bnb_t: {
+      url: "https://opbnb-testnet-rpc.bnbchain.org",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      chainId: 5611,
+    },
 
     galadriel: {
 			chainId: 696969,

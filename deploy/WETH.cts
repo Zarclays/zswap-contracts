@@ -74,6 +74,11 @@ const wethDeployNames= {
   696969:{
     name: 'Wrapped GAL',
     symbol: 'wGAL'
+  },
+
+  5611: {
+    name: 'Wrapped BNB',
+    symbol: 'wBNB'
   }
 }
 

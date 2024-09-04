@@ -28,6 +28,8 @@ const func = async function ({
 
   const feeToSetter=deployer; //'0x5663b6cdbb0dd72ba348671af5bdb81baaa633df'
 
+  console.log('deployer:', deployer)
+  
   await deploy("UniswapV2Factory", {
     contract: {
       abi,
@@ -56,10 +58,16 @@ const func = async function ({
 
     const chainsToUseZSwapFeeReceiver=[
       31337,
-      44787,
-
+      42220, //celo
+      44787, //celo test
+      97, //bsc test
+      56, // bsc
+      5611, //opBNbTest
     ]
     console.log(chainId)
+
+    
+
     if(chainsToUseZSwapFeeReceiver.some(s=>s== +chainId)){
       let feeReceiver = await deploy("zSwapFeeReceiver", {        
         from: deployer,
@@ -68,12 +76,14 @@ const func = async function ({
         deterministicDeployment: false, //"0x034deAdFac",
       });
       
-      await factory.setFeeTo(feeReceiver.address);
+      (await factory.setFeeTo(feeReceiver.address)
         // .connect(await ethers.getNamedSigner("dev"))
+      ).wait();
         
     }else{
-      await factory.setFeeTo(feeToSetter);
+      (await factory.setFeeTo(feeToSetter)
         // .connect(await ethers.getNamedSigner("dev"))
+      ).wait()
         
     }
     
