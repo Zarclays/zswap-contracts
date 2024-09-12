@@ -197,6 +197,7 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
     constructor(IERC20 _reward, uint256 _rewardPerSecond, address owner) {
         REWARD = _reward;
         rewardPerSecond = _rewardPerSecond;
+        emit LogRewardPerSecond(_rewardPerSecond);
         transferOwnership(owner, true,false);
     }
 

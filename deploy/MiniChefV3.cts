@@ -2,7 +2,7 @@
 
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
-import { formatEther, parseEther } from 'ethers';
+import { formatEther, parseEther, ZeroAddress } from 'ethers';
 import { AddressMap } from '@zarclays/zswap-core-sdk';
 
 let ZSWAPTOKEN_ADDRESS: AddressMap;
@@ -118,10 +118,48 @@ const func: DeployFunction = async function ({ ethers, deployments, getNamedAcco
     await (await miniChefV3.transferOwnership(dev, true, false)).wait();
   }
 
-  console.log("Owner:  ", await miniChefV3.owner());
-  console.log("deployer:  ", deployer, ", dev: ", dev);
+  // console.log("Owner:  ", await miniChefV3.owner());
+  // console.log("deployer:  ", deployer, ", dev: ", dev);
+
   if (chainId == '31337') {
-    console.log("Adding Lp1 and L2 start ");
+    
+
+    const factory = await ethers.getContract("UniswapV2Factory")
+    const router = await ethers.getContract("UniswapV2Router02")
+    const zswapTokenContract = await ethers.getContract("ZSwapToken");
+
+    const wethAddress = await router.WETH();
+    // console.log("Adding Lp1 and L2 start. zswap: ", zSwapAddress, ', depl: ', deployer,', weth: ', wethAddress);
+
+    let pairAddress = await factory.getPair(zSwapAddress,wethAddress);
+    if (pairAddress === ZeroAddress) {
+      // Create pair
+      let txCreatePair = await factory.createPair(zSwapAddress, wethAddress);
+      await txCreatePair.wait();
+
+      await(await zswapTokenContract.approve((await deployments.get("UniswapV2Router02")).address, parseEther('1000000'))).wait();
+      await(await zswapTokenContract.mint(deployer, parseEther('1000000'))).wait();
+
+
+      const tx = await router.addLiquidityETH(
+        zSwapAddress,
+        parseEther('100'),      
+        parseEther('100'), 
+        parseEther('20'),
+        deployer,
+        Math.floor(Date.now() / 1000) + 60 * 20,
+        {
+          value: parseEther('20')
+        }
+      );
+    
+      await tx.wait();  
+      pairAddress = await factory.getPair(zSwapAddress,wethAddress);
+    }
+
+    
+
+
     const lp1 = await deploy("TestToken2", {
       from: deployer,
       log: true,
@@ -135,21 +173,53 @@ const func: DeployFunction = async function ({ ethers, deployments, getNamedAcco
       args: [deployer, 'LP Token 2', 'LPTOKEN2'],
       deterministicDeployment: false
     })
-    console.log("Adding Lp1 and L2 - devevve", lp1.address, lp2.address, (await ethers.getNamedSigner("dev")).address);
-    await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(150, lp1.address, false)).wait();
-    await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(50, lp2.address, true)).wait();
+
+    let pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+    if (pairAddress2 === ZeroAddress) {
+      // Create pair
+      let txCreatePair = await factory.createPair( lp2.address, wethAddress);
+      await txCreatePair.wait();
+
+      const lp2Contract = await ethers.getContractAt("TestToken2", lp2.address)
+      await(await lp2Contract.approve((await deployments.get("UniswapV2Router02")).address, parseEther('1000000'))).wait();
+      await(await lp2Contract.mint(deployer, parseEther('1000000'))).wait();
 
 
-    const zswapTokenContract = await ethers.getContract("ZSwapToken");
+      const tx2 = await router.addLiquidityETH(
+        lp2.address,
+        parseEther('100'),      
+        parseEther('100'), 
+        parseEther('20'),
+        deployer,
+        Math.floor(Date.now() / 1000) + 60 * 20,
+        {
+          value: parseEther('20')
+        }
+      );
+    
+      await tx2.wait();  
+      pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+    }
 
-    await(await zswapTokenContract.mint((await deployments.get("MiniChefV3")).address, parseEther('1000000'))).wait();
-    // await(await zswapTokenContract.mint(lp2.address, parseEther('100000'))).wait();
+    
 
-    // console.log('Balance: ',formatEther( await zswapTokenContract.balanceOf((await deployments.get("MiniChefV3")).address)), (await deployments.get("MiniChefV3")).address )
 
-    // console.log('Addreess: ', (await deployments.get("ZSwapToken")).address)
+    console.log("Adding Lp1 and L2 - devevve", pairAddress, pairAddress2, (await ethers.getNamedSigner("dev")).address);
+    
+    
+    try{
+      await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(150, pairAddress, true)).wait();
+      await (await miniChefV3.connect(await ethers.getNamedSigner("dev")).add(50, pairAddress2, true)).wait();
+   
 
-    // console.log('Reward: ',await miniChefV3.REWARD())
+      await(await zswapTokenContract.mint((await deployments.get("MiniChefV3")).address, parseEther('1000000'))).wait();
+      // await(await lp2.mint((await deployments.get("MiniChefV3")).address, parseEther('1000000'))).wait();
+
+    }catch(errAddPool){
+
+    }
+    
+    
   }
 
 };

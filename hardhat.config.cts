@@ -88,17 +88,17 @@ const config: HardhatUserConfig = {
       gasPrice: 120 * 1000000000,
       chainId: 1,
     },
-    localhost: {
-      live: false,
-      saveDeployments: true,
-      tags: ["local"],
-      accounts: liveDeploymentAccount,
-    },
+    // localhost: {
+    //   live: false,
+    //   saveDeployments: true,
+    //   tags: ["local"],
+    //   accounts: liveDeploymentAccount,
+    // },
     hardhat: {
-      forking: {
-        enabled: process.env.FORKING === "true",
-        url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
-      },
+      // forking: {
+      //   enabled: process.env.FORKING === "true",
+      //   url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      // },
       live: false,
       saveDeployments: true,
       tags: ["test", "local"],

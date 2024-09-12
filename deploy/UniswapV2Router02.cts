@@ -22,7 +22,14 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
   
   let wethAddress;
 
-  if (chainId in WNATIVE_ADDRESS) {
+  
+  if (chainId ==='31337') {
+    wethAddress=(await deployments.get("WETH9")).address;
+    if(!wethAddress){
+      throw Error("No WNATIVE!");
+    }
+  } 
+  else if (chainId in WNATIVE_ADDRESS) {
     wethAddress = WNATIVE_ADDRESS[chainId];
   } 
   else if(chainId=='1115'){
@@ -42,6 +49,8 @@ const func = async function ({ getNamedAccounts, deployments, ethers,getChainId 
 
 
   console.log('deploying router fro deployer address:  ', deployer )
+
+  console.log('wethAddress is ', wethAddress)
 
   await deploy((chainId === '42220' || chainId === '44787') ? "UniswapV2Router02Celo" : "UniswapV2Router02", {
     from: deployer,

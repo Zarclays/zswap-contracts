@@ -3,6 +3,8 @@
 
   const { deployer } = await getNamedAccounts()
 
+  console.log('deploeyer for zswaptoken:', deployer)
+
   await deploy("ZSwapToken", {
     from: deployer,
     log: true,
