@@ -22,5 +22,6 @@ export { TestToken__factory } from "./TestToken__factory";
 export { TestToken2__factory } from "./TestToken2__factory";
 export { WETH9__factory } from "./WETH9__factory";
 export { ZSwapToken__factory } from "./ZSwapToken__factory";
+export { ZSalesTapper__factory } from "./ZSalesTapper__factory";
 export { ZSwapFeeReceiver__factory } from "./ZSwapFeeReceiver__factory";
 export { ZSwapMaker__factory } from "./ZSwapMaker__factory";

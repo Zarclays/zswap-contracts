@@ -450,6 +450,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.WETH9__factory>;
     getContractFactory(
+      name: "ZSalesTapper",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ZSalesTapper__factory>;
+    getContractFactory(
       name: "ZSwapFeeReceiver",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ZSwapFeeReceiver__factory>;
@@ -1008,6 +1012,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.WETH9>;
     getContractAt(
+      name: "ZSalesTapper",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ZSalesTapper>;
+    getContractAt(
       name: "ZSwapFeeReceiver",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -1460,6 +1469,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.WETH9>;
     deployContract(
+      name: "ZSalesTapper",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ZSalesTapper>;
+    deployContract(
       name: "ZSwapFeeReceiver",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ZSwapFeeReceiver>;
@@ -2017,6 +2030,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.WETH9>;
+    deployContract(
+      name: "ZSalesTapper",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ZSalesTapper>;
     deployContract(
       name: "ZSwapFeeReceiver",
       args: any[],

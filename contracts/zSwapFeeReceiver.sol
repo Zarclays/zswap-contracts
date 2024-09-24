@@ -5,8 +5,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
 error NotEnoughBalance();
-contract zSwapFeeReceiver is Ownable {
+contract zSwapFeeReceiver is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     enum CoinType{
         Native,
@@ -28,6 +30,9 @@ contract zSwapFeeReceiver is Ownable {
 
     event NFTWithdrawal(address indexed tokenAddress,address indexed to, uint256 tokenId, CoinType coinType);
 
+    constructor() {
+
+    }
     // Receive ETH
     receive() external payable {
         emit ETHReceived(msg.sender, msg.value);
@@ -36,21 +41,21 @@ contract zSwapFeeReceiver is Ownable {
     
 
     // Admin withdrawal function
-    function withdraw(uint256 amount, address payable to) public onlyOwner {
+    function withdraw(uint256 amount, address payable to) public onlyOwner nonReentrant{
         require(address(this).balance >= amount, NotEnoughBalance());
         to.transfer(amount);
         emit Withdrawal(address(0), to, amount, CoinType.Native );
     }
 
     // Withdraw ERC20 tokens
-    function withdrawERC20(IERC20 token, uint256 amount, address to) public onlyOwner {
+    function withdrawERC20(IERC20 token, uint256 amount, address to) public onlyOwner nonReentrant {
         require(token.balanceOf(address(this)) >= amount, NotEnoughBalance());
         token.safeTransfer(to, amount);
         emit Withdrawal(address(token), to, amount, CoinType.ERC20 );
     }
 
     // Withdraw NFTs
-    function withdrawNFT(IERC721 token, uint256 tokenId, address to) public onlyOwner {
+    function withdrawNFT(IERC721 token, uint256 tokenId, address to) public onlyOwner nonReentrant {
         
         token.safeTransferFrom(address(this), to, tokenId);
         emit Withdrawal(address(token), to, tokenId, CoinType.Native );

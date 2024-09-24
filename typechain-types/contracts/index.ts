@@ -34,5 +34,6 @@ export type { TestToken } from "./TestToken";
 export type { TestToken2 } from "./TestToken2";
 export type { WETH9 } from "./WETH9";
 export type { ZSwapToken } from "./ZSwapToken";
+export type { ZSalesTapper } from "./ZSalesTapper";
 export type { ZSwapFeeReceiver } from "./ZSwapFeeReceiver";
 export type { ZSwapMaker } from "./ZSwapMaker";

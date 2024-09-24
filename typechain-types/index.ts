@@ -176,6 +176,8 @@ export type { UniswapV2Router02Celo } from "./contracts/uniswapv2/UniswapV2Route
 export { UniswapV2Router02Celo__factory } from "./factories/contracts/uniswapv2/UniswapV2Router02Celo__factory";
 export type { WETH9 } from "./contracts/WETH9";
 export { WETH9__factory } from "./factories/contracts/WETH9__factory";
+export type { ZSalesTapper } from "./contracts/ZSalesTapper";
+export { ZSalesTapper__factory } from "./factories/contracts/ZSalesTapper__factory";
 export type { ZSwapFeeReceiver } from "./contracts/ZSwapFeeReceiver";
 export { ZSwapFeeReceiver__factory } from "./factories/contracts/ZSwapFeeReceiver__factory";
 export type { ZSwapMaker } from "./contracts/ZSwapMaker";
