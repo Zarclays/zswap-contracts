@@ -494,7 +494,30 @@ const config: HardhatUserConfig = {
 			url: "https://devnet.galadriel.com/",
 			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
 		},
+    aurora: {
+			url: "https://mainnet.aurora.dev",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			chainId: 1313161554 ,
+		},
+		aurora_t: {
+			url: "https://testnet.aurora.dev/",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			chainId: 1313161555,
+		},
 
+    morphTestnet: {
+      url: 'https://rpc-holesky.morphl2.io',
+      chainId: 2810,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+      gasPrice: 2000000000 // 2 gwei in wei
+    },
+
+    neoX_t: {
+      url: 'https://neoxt4seed1.ngd.network',
+      chainId: 12227332,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+      gasPrice: 40000000000 // 40 gwei in wei
+    },
 
   },
   paths: {

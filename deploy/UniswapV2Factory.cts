@@ -63,6 +63,8 @@ const func = async function ({
       97, //bsc test
       56, // bsc
       5611, //opBNbTest
+      252, //fraxtal
+      2522, //fraxtal testnet
     ]
     console.log(chainId)
 

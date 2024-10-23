@@ -79,6 +79,10 @@ const wethDeployNames= {
   5611: {
     name: 'Wrapped BNB',
     symbol: 'wBNB'
+  },
+  1313161555: {
+    name: 'Wrapped ETH',
+    symbol: 'WETH'
   }
 }
 
