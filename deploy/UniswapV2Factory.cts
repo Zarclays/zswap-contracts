@@ -65,6 +65,7 @@ const func = async function ({
       5611, //opBNbTest
       252, //fraxtal
       2522, //fraxtal testnet
+      1313161554, //Aurora
     ]
     console.log(chainId)
 

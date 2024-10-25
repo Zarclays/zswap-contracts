@@ -496,7 +496,7 @@ const config: HardhatUserConfig = {
 		},
     aurora: {
 			url: "https://mainnet.aurora.dev",
-			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
+			accounts: liveDeploymentAccount,
 			chainId: 1313161554 ,
 		},
 		aurora_t: {
@@ -518,6 +518,13 @@ const config: HardhatUserConfig = {
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
       gasPrice: 40000000000 // 40 gwei in wei
     },
+    neoX:{
+      url: 'https://mainnet-1.rpc.banelabs.org',
+      chainId: 47763,
+      accounts: liveDeploymentAccount,
+      // gasPrice: 40000000000 // 40 gwei in wei
+      
+    }
 
   },
   paths: {
