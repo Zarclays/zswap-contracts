@@ -44,7 +44,7 @@ const func = async function ({
   
   const factory = await ethers.getContract("UniswapV2Factory");
   const initCodeHash = await factory.pairCodeHash();
-  console.log('Init code has is:', initCodeHash);
+  console.log('Init code hash is:', initCodeHash);
 
   fs.appendFile('Init_code_hashes.txt', `Init Code hash for chain ${chainId} -> ${initCodeHash} \n`, 'utf8',(err)=>{
     if(err){
@@ -66,6 +66,7 @@ const func = async function ({
       252, //fraxtal
       2522, //fraxtal testnet
       1313161554, //Aurora
+      47763, // Neo X
     ]
     console.log(chainId)
 
@@ -78,10 +79,12 @@ const func = async function ({
         log: true,
         deterministicDeployment: false, //"0x034deAdFac",
       });
-      
-      (await factory.setFeeTo(feeReceiver.address)
+      if(+chainId!==47763){
+        (await factory.setFeeTo(feeReceiver.address)
         // .connect(await ethers.getNamedSigner("dev"))
-      ).wait();
+        ).wait();
+      }
+      
         
     }else{
       (await factory.setFeeTo(feeToSetter)

@@ -516,14 +516,16 @@ const config: HardhatUserConfig = {
       url: 'https://neoxt4seed1.ngd.network',
       chainId: 12227332,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
-      gasPrice: 40000000000 // 40 gwei in wei
+      gasPrice: 60000000000 // 40 gwei in wei
+                
     },
     neoX:{
       url: 'https://mainnet-1.rpc.banelabs.org',
       chainId: 47763,
       accounts: liveDeploymentAccount,
-      // gasPrice: 40000000000 // 40 gwei in wei
-      
+      gasMultiplier: 2,
+      gasPrice: 100000000000,// 400000000000, // 40 gwei in wei
+      // gas: 400000000000
     }
 
   },

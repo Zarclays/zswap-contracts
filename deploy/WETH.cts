@@ -83,6 +83,15 @@ const wethDeployNames= {
   1313161555: {
     name: 'Wrapped ETH',
     symbol: 'WETH'
+  },
+
+  12227332: {
+    name: 'Wrapped GAS',
+    symbol: 'wGAS'
+  },
+  47763: {
+    name: 'Wrapped GAS',
+    symbol: 'wGAS'
   }
 }
 
@@ -104,7 +113,7 @@ const func = async function ({ getNamedAccounts, deployments }) {
       });
     const weth = await ethers.getContract("WETH9");
     wethAddress = weth.address
-  } else if (  chainId in WNATIVE_ADDRESS) {
+  } else if (WNATIVE_ADDRESS &&  chainId in WNATIVE_ADDRESS) {
     
     wethAddress = WNATIVE_ADDRESS[chainId];
     console.log('Using Native WETH ', wethAddress)
@@ -120,7 +129,9 @@ const func = async function ({ getNamedAccounts, deployments }) {
         args: [wethInChain.name, wethInChain.symbol],
         log: true,
         deterministicDeployment: false,
+        nonce: 'pending'
       });
+
         const weth = await ethers.getContract("WETH9");
         wethAddress = weth.address
       
