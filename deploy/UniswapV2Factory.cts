@@ -79,11 +79,11 @@ const func = async function ({
         log: true,
         deterministicDeployment: false, //"0x034deAdFac",
       });
-      if(+chainId!==47763){
-        (await factory.setFeeTo(feeReceiver.address)
-        // .connect(await ethers.getNamedSigner("dev"))
-        ).wait();
-      }
+      
+      (await factory.setFeeTo(feeReceiver.address)
+      // .connect(await ethers.getNamedSigner("dev"))
+      ).wait();
+      
       
         
     }else{
