@@ -95,7 +95,7 @@ const wethDeployNames= {
   }
 }
 
-const func = async function ({ getNamedAccounts, deployments }) {
+const func = async function ({ getNamedAccounts, deployments, getChainId }) {
   const { deploy } = deployments;
 
   const { deployer } = await getNamedAccounts();
