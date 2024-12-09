@@ -205,6 +205,8 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
         return poolInfo.length;
     }
 
+
+
     /// @notice Add a new LP to the pool. Can only be called by the owner.
     /// DO NOT add the same LP token more than once. Rewards will be messed up if you do.
     /// @param allocPoint AP of the new pool.
@@ -270,14 +272,19 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
     }
 
     function deposit(uint256 pid, uint256 amount, address to) public {
+        console.log('starting');
         PoolInfo memory pool = updatePool(pid);
+        console.log('updated ppool');
         UserInfo storage user = userInfo[pid][to];
 
+        console.log('gotten user');
+
         user.amount = user.amount + amount;
+        console.log('gotten user 2');
         user.rewardDebt = user.rewardDebt + int256(amount * pool.accRewardPerShare / ACC_REWARD_PRECISION);
-
+        console.log('gotten rewardDebt');
         lpToken[pid].safeTransferFrom(msg.sender, address(this), amount);
-
+        console.log('gotten transferred');
         emit Deposit(msg.sender, pid, amount, to);
     }
 
@@ -295,6 +302,7 @@ contract MiniChefV3 is BoringOwnable, ReentrancyGuard, BoringBatchable {
         emit Withdraw(msg.sender, pid, amount, to);
     }
 
+    //Harvest Rewards
     function harvest(uint256 pid, address to) public {
         PoolInfo memory pool = updatePool(pid);
         UserInfo storage user = userInfo[pid][msg.sender];

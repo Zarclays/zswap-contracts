@@ -11,3 +11,5 @@ coverage.json
 .DS_Store
 /notes.txt
 /yarn-error.log
+/deployments/ganache
+/deployments/localhost

@@ -696,3 +696,231 @@ task("deploy:complex-rewarder", "Deploy ComplexRewarder")
 //     await (await cloneRewarder.transferOwnership(dev, true, false)).wait();
 //   }
 // });
+
+
+const minichefToken='0x3Aa5ebB10DC797CAC828524e59A333d0A371443c'
+
+task("minichef3:add", "Add pool to minichef3").setAction(async function (
+  taskArguments,
+  { deployments, ethers: {getNamedSignerOrNull, getNamedSigner, getContract, getContractAt } },
+  runSuper
+) {
+  const deployer = await getNamedSigner('deployer');
+  const dev = await getNamedSigner('dev');
+  const { deploy } = deployments;
+  const chef = await getContract("MiniChefV3");
+  const factory: any = await getContract("UniswapV2Factory");
+  const router: any = await getContract("UniswapV2Router02")
+  const zswapTokenContract = await getContract("ZSwapToken");
+
+  const routerAddress = (await deployments.get("UniswapV2Router02")).address
+
+  console.log('router fro Roture: ', await router.getAddress())
+  console.log('router fro deployments: ', (await deployments.get("UniswapV2Router02")).address)
+
+  //@ts-ignore
+  const wethAddress = await router.WETH();
+
+  const lp2 = await deploy("TestToken2", {
+    from: deployer.address,
+    log: true,
+    args: [deployer.address, 'LP TESTToken 2'+ new Date().toISOString(), 'LPTESTTOKEN2'],
+    deterministicDeployment: true
+  })
+
+  console.log('deployer address: ', deployer.address, ', wethAddress: ',wethAddress, ', router address: ',router.address )
+
+  //@ts-ignore
+  let pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+  console.log('pairAddress2: ', pairAddress2, ', lp2: ', lp2.address)
+  if (pairAddress2 === '0x0000000000000000000000000000000000000000') {
+    // Create pair
+    let txCreatePair = await factory.createPair( lp2.address, wethAddress);
+    await txCreatePair.wait();
+
+    const lp2Contract = await getContractAt("TestToken2", lp2.address)
+    console.log('lp2Contract: ',  lp2Contract==undefined)
+    await(await lp2Contract.approve(routerAddress, ethers.parseEther('1000000'))).wait();
+    console.log('lp2Contract 2 approv: ',  lp2Contract==undefined)
+    await(await lp2Contract.mint(deployer.address, ethers.parseEther('1000000'))).wait();
+
+    console.log('router: ',  router.address)
+    const tx2 = await router.addLiquidityETH(
+      lp2.address,
+      ethers.parseEther('100'),      
+      ethers.parseEther('100'), 
+      ethers.parseEther('20'),
+      deployer.address,
+      Math.floor(Date.now() / 1000) + 60 * 20,
+      {
+        value: ethers.parseEther('20')
+      }
+    );
+  
+    await tx2.wait();  
+    console.log('tx2 done')
+    pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+  }
+
+  await (
+    await chef
+      .connect((await getNamedSigner("dev")))
+      //@ts-ignore
+      .add(1000, pairAddress2, true)
+  ).wait();
+});
+
+task("minichef3:deposit", "MiniChef3 deposit")
+  .addParam("pid", "Pool ID")
+  .addParam("amount", "Amount")
+  .setAction(async function (
+    { pid, amount },
+    { ethers: { getNamedSigner, getContract, getContractAt }, run },
+    runSuper
+  ) {
+    const chef = await getContract("MiniChefV3");
+    //@ts-ignore
+    const  lpToken  = await chef.lpToken(pid);
+    console.log('lpToken: ',lpToken)
+    await run("erc20:approve", { token: lpToken, spender: await chef.getAddress() });
+
+    const slp = await getContractAt("UniswapV2ERC20", lpToken);
+
+    console.log('lpToken balance: ',await slp.balanceOf((await getNamedSigner("deployer")).address), ethers.formatEther(await slp.balanceOf((await getNamedSigner("deployer")).address)) )
+
+    console.log('Chef balance: ',await slp.balanceOf(await chef.getAddress()), ethers.formatEther(await slp.balanceOf(await chef.getAddress() )) )
+
+    console.log('Format : ',ethers.parseEther("0.1") , ethers.formatEther("1000000000000") )
+    
+
+    // await (
+    //   //@ts-ignore
+    //   await slp.connect(await getNamedSigner("dev")).approve(spender, deadline)
+    // ).wait();
+
+    await (
+      //@ts-ignore
+      await chef.connect(await getNamedSigner("deployer")).deposit(pid, amount, (await getNamedSigner("deployer")).address)
+    ).wait();
+  });
+
+  task("minichef3:addNDep", "Add pool to minichef3").setAction(async function (
+    taskArguments,
+    { deployments, ethers: {getNamedSignerOrNull, getNamedSigner, getContract, getContractAt }, run },
+    runSuper
+  ) {
+    const deployer = await getNamedSigner('deployer');
+    const dev = await getNamedSigner('dev');
+    const { deploy } = deployments;
+    const chef = await getContract("MiniChefV3");
+    const factory: any = await getContract("UniswapV2Factory");
+    const router: any = await getContract("UniswapV2Router02")
+    const zswapTokenContract = await getContract("ZSwapToken");
+  
+    const routerAddress = (await deployments.get("UniswapV2Router02")).address
+  
+    //@ts-ignore
+    const wethAddress = await router.WETH();
+  
+    const lp2 = await deploy("TestToken2", {
+      from: deployer.address,
+      log: true,
+      args: [deployer.address, 'LP TESTToken 2'+ new Date().toISOString(), 'LPTESTTOKEN2'],
+      deterministicDeployment: true
+    })
+  
+    console.log('deployer address: ', deployer.address, ', wethAddress: ',wethAddress, ', router address: ',router.address )
+  
+    //@ts-ignore
+    let pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+    console.log('pairAddress2: ', pairAddress2, ', lp2: ', lp2.address)
+    if (pairAddress2 === '0x0000000000000000000000000000000000000000') {
+      // Create pair
+      let txCreatePair = await factory.createPair( lp2.address, wethAddress);
+      await txCreatePair.wait();
+  
+      const lp2Contract = await getContractAt("TestToken2", lp2.address)
+      
+      await(await lp2Contract.approve(routerAddress, ethers.parseEther('1000000'))).wait();
+      
+      await(await lp2Contract.mint(deployer.address, ethers.parseEther('1000000'))).wait();
+  
+      
+      const tx2 = await router.addLiquidityETH(
+        lp2.address,
+        ethers.parseEther('100'),      
+        ethers.parseEther('100'), 
+        ethers.parseEther('20'),
+        deployer.address,
+        Math.floor(Date.now() / 1000) + 60 * 20,
+        {
+          value: ethers.parseEther('20')
+        }
+      );
+    
+      await tx2.wait();  
+      
+      pairAddress2 = await factory.getPair( lp2.address,wethAddress);
+      console.log('tx2 done')
+    }
+  
+    await (
+      await chef
+        .connect((await getNamedSigner("dev")))
+        //@ts-ignore
+        .add(1000, pairAddress2, true)
+    ).wait();
+
+    const pid = +(await chef.poolLength()).toString() - 1
+    //@ts-ignore
+    const  lpToken  = await chef.lpToken(pid);
+    console.log('lpToken: ',lpToken, ', pid: ', pid);
+
+    await run("erc20:approve", { token: lpToken, spender: await chef.getAddress() });
+
+    const slp = await getContractAt("UniswapV2ERC20", lpToken);
+
+    await(await slp.approve( await chef.getAddress(), ethers.parseEther("100000000000") ))
+
+    console.log('lpToken balance: ',await slp.balanceOf((await getNamedSigner("deployer")).address), ethers.formatEther(await slp.balanceOf((await getNamedSigner("deployer")).address)) )
+
+    console.log('Format : ',ethers.parseEther("0.1") , ethers.formatEther("1000000000000") )
+    
+
+    // await (
+    //   //@ts-ignore
+    //   await slp.connect(await getNamedSigner("dev")).approve(spender, deadline)
+    // ).wait();
+
+    await (
+      //@ts-ignore
+      await chef.connect(await getNamedSigner("deployer")).deposit(pid, ethers.parseEther("0.10"), (await getNamedSigner("deployer")).address)
+    ).wait();
+
+
+
+
+  });
+  
+  
+task("minichef3:withdraw", "MiniChef3 withdraw")
+  .addParam("pid", "Pool ID")
+  .addParam("amount", "Amount")
+  .setAction(async function (
+    { pid, amount },
+    { ethers: { getNamedSigner, getContract }, run },
+    runSuper
+  ) {
+    const chef = await getContract("MiniChefV3");
+    //@ts-ignore
+    const  lpToken  = await chef.lpToken(pid);
+
+    await run("erc20:approve", { token: lpToken, spender: await chef.getAddress() });
+
+    await (
+      await chef
+        .connect(await getNamedSigner("deployer"))
+        //@ts-ignore
+        .withdraw(pid, amount, (await getNamedSigner("deployer")).address)
+    ).wait();
+  });
