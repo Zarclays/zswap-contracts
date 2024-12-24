@@ -276,7 +276,7 @@ task("erc20:approve", "ERC20 approve")
 
     await (
       //@ts-ignore
-      await slp.connect(await getNamedSigner("dev")).approve(spender, deadline)
+      await slp.connect(await getNamedSigner("deployer")).approve(spender, deadline)
     ).wait();
   });
 
@@ -340,12 +340,12 @@ task("router:add-liquidity", "Router add liquidity")
     { ethers: {getContract, getNamedSigner }, run },
     runSuper
   ) {
-    const router = await getContract("UniswapV2Router");
-    await run("erc20:approve", { token: tokenA, spender: router.getAddress() });
-    await run("erc20:approve", { token: tokenB, spender: router.getAddress()});
+    const router = await getContract("UniswapV2Router02");
+    await run("erc20:approve", { token: tokenA, spender: await router.getAddress() });
+    await run("erc20:approve", { token: tokenB, spender: await router.getAddress()});
     await (
       await router
-        .connect(await getNamedSigner("dev"))
+        .connect(await getNamedSigner("deployer"))
         //@ts-ignore
         .addLiquidity(
           tokenA,

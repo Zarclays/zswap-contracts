@@ -516,7 +516,7 @@ const config: HardhatUserConfig = {
       url: 'https://neoxt4seed1.ngd.network',
       chainId: 12227332,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2!] : [],
-      gasPrice: 60000000000 // 40 gwei in wei
+      gasPrice: 40000000000 // 40 gwei in wei
                 
     },
     neoX:{
