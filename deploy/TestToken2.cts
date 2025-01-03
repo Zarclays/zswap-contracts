@@ -22,6 +22,17 @@
     args:[deployer, "Love","LOVE"]
   })
 
+  // const loveT = await ethers.getContract("LoveTestToken2"); 
+  // console.log('Love paused: ', (await loveT.paused()))
+  // let tx = await (await loveT.transfer('0x379880471413Ee438018aa7512C4a515308FB6fD', ethers.parseEther('1'))).wait();
+  // console.log('Love Transfer res : ', tx)
+
+  // const usdtT = await ethers.getContract("USDTTestToken2"); 
+  // console.log('Usdt paused: ', (await usdtT.paused()))
+  // tx = await (await usdtT.transfer('0x379880471413Ee438018aa7512C4a515308FB6fD', ethers.parseEther('1000'))).wait();
+  // console.log('USDT Transfer res : ', tx)
+
+
   // const router = await ethers.getContract("UniswapV2Router"); 
   //   await run("erc20:approve", { token: tokenA, spender: router.getAddress() });
   //   await run("erc20:approve", { token: tokenB, spender: router.getAddress()});
