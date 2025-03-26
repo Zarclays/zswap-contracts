@@ -1,0 +1,99 @@
+// Defining bytecode and abi from original contract on mainnet to ensure bytecode matches and it produces the same pair code hash
+// const {
+//   bytecode,
+//   abi,
+// } = require("../deployments/mainnet/UniswapV2Factory.json");
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import {
+  bytecode,
+  abi,
+} from "../deployments/localhost-factory-abi/UniswapV2Factory.json"
+
+import fs from 'fs';
+
+const func = async function ({
+  ethers,
+  getNamedAccounts,
+  deployments,
+  getChainId,
+}: HardhatRuntimeEnvironment) {
+  const { deploy } = deployments;
+
+  
+  
+
+  const { deployer, dev } = await getNamedAccounts();
+
+  const chainId = await getChainId();
+
+  const feeToSetter=deployer; //'0x5663b6cdbb0dd72ba348671af5bdb81baaa633df'
+
+  console.log('deployer:', deployer)
+  
+  await deploy("UniswapV3Factory", {
+    
+    from: deployer,
+    args: [],
+    log: true,
+    deterministicDeployment: false, //"0x034deAdFac",
+  });
+
+  
+  // const factory = await ethers.getContract("UniswapV3Factory");
+  // const initCodeHash = await factory.pairCodeHash();
+  // console.log('Init code hash is:', initCodeHash);
+
+  // fs.appendFile('Init_code_hashes.txt', `Init Code hash for chain ${chainId} -> ${initCodeHash} \n`, 'utf8',(err)=>{
+  //   if(err){
+  //     console.error('Error savng Init code hash')
+  //   }
+  // })
+
+
+  // // await factory.connect("dev").setFeeTo(feeTo)
+  // try{
+
+  //   const chainsToUseZSwapFeeReceiver=[
+  //     31337,
+  //     42220, //celo
+  //     44787, //celo test
+  //     97, //bsc test
+  //     56, // bsc
+  //     5611, //opBNbTest
+  //     252, //fraxtal
+  //     2522, //fraxtal testnet
+  //     1313161554, //Aurora
+  //     47763, // Neo X
+  //   ]
+  //   console.log(chainId)
+
+    
+
+  //   if(chainsToUseZSwapFeeReceiver.some(s=>s== +chainId)){
+  //     let feeReceiver = await deploy("zSwapFeeReceiver", {        
+  //       from: deployer,
+  //       args: [],
+  //       log: true,
+  //       deterministicDeployment: false, //"0x034deAdFac",
+  //     });
+      
+  //     (await factory.setFeeTo(feeReceiver.address)
+  //     // .connect(await ethers.getNamedSigner("dev"))
+  //     ).wait();
+      
+      
+        
+  //   }else{
+  //     (await factory.setFeeTo(feeToSetter)
+  //       // .connect(await ethers.getNamedSigner("dev"))
+  //     ).wait()
+        
+  //   }
+    
+    // }catch(err1){
+    //   console.error("Error setting FeeTo: ", err1)
+    // }
+};
+
+func.tags = ["V3Factory", "AMM3"];
+export default func;

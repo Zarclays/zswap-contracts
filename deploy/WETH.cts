@@ -111,7 +111,7 @@ const func = async function ({ getNamedAccounts, deployments, getChainId }) {
         log: true,
         deterministicDeployment: false,
       });
-    const weth = await ethers.getContract("WETH9");
+    const weth = await ethers.getContract("WETH9");//0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
     wethAddress = weth.address
   } else if (WNATIVE_ADDRESS &&  chainId in WNATIVE_ADDRESS) {
     
@@ -140,6 +140,10 @@ const func = async function ({ getNamedAccounts, deployments, getChainId }) {
     }
   }
 
+
+  const wethC = await ethers.getContract("WETH9");//0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+  let tx1= await wethC.deposit({value: ethers.parseEther('100')})
+  await tx1.wait();
 };
 
 func.tags = ["WETH", "AMM"];

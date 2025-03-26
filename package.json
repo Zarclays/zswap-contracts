@@ -108,6 +108,9 @@
   },
   "type": "module",
   "dependencies": {
-    "patch-package": "^8.0.0"
+    "@uniswap/lib": "^4.0.1-alpha",
+    "base64-sol": "^1.1.0",
+    "patch-package": "^8.0.0",
+    "solmate": "^6.8.0"
   }
 }

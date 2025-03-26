@@ -262,21 +262,21 @@ task("feeder:return", "Return funds to feeder").setAction(async function (
 task("erc20:approve", "ERC20 approve")
   .addParam("token", "Token")
   .addParam("spender", "Spender")
-  .addOptionalParam("deadline","Deadline", MaxUint256, types.bigint)
+  .addOptionalParam("allowance","Allowance", MaxUint256, types.bigint)
   .setAction(async function (
-    { token, spender, deadline },
+    { token, spender, allowance },
     { ethers: {  getContractFactory, getNamedSigner }  },
     runSuper
   ) {
     
-    
+    console.log('Approving ', allowance)
     const erc20 = await getContractFactory("UniswapV2ERC20");
 
     const slp = erc20.attach(token);
 
     await (
       //@ts-ignore
-      await slp.connect(await getNamedSigner("deployer")).approve(spender, deadline)
+      await slp.connect(await getNamedSigner("deployer")).approve(spender, allowance)
     ).wait();
   });
 
@@ -337,12 +337,19 @@ task("router:add-liquidity", "Router add liquidity")
       to,
       deadline,
     },
-    { ethers: {getContract, getNamedSigner }, run },
+    { ethers: {getContract,getContractAt, getNamedSigner }, run },
     runSuper
   ) {
     const router = await getContract("UniswapV2Router02");
     await run("erc20:approve", { token: tokenA, spender: await router.getAddress() });
     await run("erc20:approve", { token: tokenB, spender: await router.getAddress()});
+
+    const erc20TokenA = await getContract("TestToken", await getNamedSigner("deployer"));
+
+    //@ts-ignore
+    let balA = await erc20TokenA.balanceOf((await getNamedSigner("deployer")).address)
+    console.log('Balance is ', balA)
+
     await (
       await router
         .connect(await getNamedSigner("deployer"))

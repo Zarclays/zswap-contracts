@@ -28,6 +28,60 @@ import "./tasks/index.cts"
 import { HardhatUserConfig } from "hardhat/types"
 import { removeConsoleLog } from "hardhat-preprocessor"
 
+const LOW_OPTIMIZER_COMPILER_SETTINGS = {
+  version: '0.8.15',
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 2_000,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+}
+
+const LOWEST_OPTIMIZER_COMPILER_SETTINGS = {
+  version: '0.8.15',
+  settings: {
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 1_000,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+}
+
+const LOWEST_OPTIMIZER_COMPILER_SETTINGS_ND = {
+  version: '0.8.21',
+  settings: {
+    viaIR: true,
+    optimizer: {
+      enabled: true,
+      runs: 1_000,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+}
+
+const DEFAULT_COMPILER_SETTINGS = {
+  version: '0.8.15',
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 1_000_000,
+    },
+    metadata: {
+      bytecodeHash: 'none',
+    },
+  },
+}
+
 if(!process.env.MNEMONIC){
   throw new Error('No Mnemonic set')
 }
@@ -526,6 +580,12 @@ const config: HardhatUserConfig = {
       gasMultiplier: 2,
       gasPrice: 100000000000,// 400000000000, // 40 gwei in wei
       // gas: 400000000000
+    },
+
+    waterfall: {
+      url: "https://rpc.testnet9.waterfall.network",
+      chainId:  1501869,
+      accounts: liveDeploymentAccount
     }
 
   },
@@ -553,6 +613,15 @@ const config: HardhatUserConfig = {
         },
       },
       {
+        version: "0.7.6",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
         version: "0.8.4",
         settings: {
           optimizer: {
@@ -566,17 +635,55 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 625,
           },
+          metadata: {
+            // do not include the metadata hash, since this is machine dependent
+            // and we want all generated code to be deterministic
+            // https://docs.soliditylang.org/en/v0.8.12/metadata.html
+            bytecodeHash: 'none',
+          },
+        },
+      },
+      {
+        version: '0.8.15',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1_000_000,
+          },
+          metadata: {
+            bytecodeHash: 'none',
+          },
+        },
+      },
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+						enabled: true,
+						runs: 1000000,
+						details: {
+							yul: true,
+						},
+					},
+					viaIR: true,
+          metadata: {
+            bytecodeHash: 'none',
+          }
         },
       },
       {
         version: "0.8.19",
         settings: {
           optimizer: {
-            enabled: true,
-            runs: 200,
-          },
+						enabled: true,
+						runs: 200_000,
+						details: {
+							yul: true,
+						},
+					},
+					viaIR: true,
         },
       },
       {
@@ -593,6 +700,14 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+    overrides: {
+      'contracts/uniswapv3/periphery/NonfungiblePositionManager.sol': LOW_OPTIMIZER_COMPILER_SETTINGS,
+      'contracts/uniswapv3/periphery/test/MockTimeNonfungiblePositionManager.sol': LOW_OPTIMIZER_COMPILER_SETTINGS,
+      'contracts/uniswapv3/periphery/test/NFTDescriptorTest.sol': LOWEST_OPTIMIZER_COMPILER_SETTINGS,
+      'contracts/uniswapv3/periphery/NonfungibleTokenPositionDescriptor.sol': LOWEST_OPTIMIZER_COMPILER_SETTINGS,
+      'contracts/uniswapv3/periphery/libraries/NFTDescriptor.sol': LOWEST_OPTIMIZER_COMPILER_SETTINGS_ND,
+      'contracts/uniswapv3/periphery/libraries/NFTSVG.sol': LOWEST_OPTIMIZER_COMPILER_SETTINGS,
+    },
   },
   spdxLicenseIdentifier: {
     overwrite: false,
