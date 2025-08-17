@@ -4,10 +4,7 @@
 //   abi,
 // } = require("../deployments/mainnet/UniswapV2Factory.json");
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import {
-  bytecode,
-  abi,
-} from "../deployments/localhost-factory-abi/UniswapV2Factory.json"
+
 
 import fs from 'fs';
 

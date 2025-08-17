@@ -693,7 +693,7 @@ export interface INonfungiblePositionManager extends BaseContract {
   >;
 
   setApprovalForAll: TypedContractMethod<
-    [operator: AddressLike, _approved: boolean],
+    [operator: AddressLike, approved: boolean],
     [void],
     "nonpayable"
   >;
@@ -908,7 +908,7 @@ export interface INonfungiblePositionManager extends BaseContract {
   getFunction(
     nameOrSignature: "setApprovalForAll"
   ): TypedContractMethod<
-    [operator: AddressLike, _approved: boolean],
+    [operator: AddressLike, approved: boolean],
     [void],
     "nonpayable"
   >;
